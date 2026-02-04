@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About - voidwr</title>
+  <title>voidwr - About</title>
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -71,40 +71,7 @@
     </div>
   </div>
 </section>
-
-<script>
-  // Matrix-style cursor particles
-  const particles = [];
-  
-  document.addEventListener('mousemove', (e) => {
-    if (Math.random() > 0.8) {
-      createParticle(e.clientX, e.clientY);
-    }
-  });
-
-  function createParticle(x, y) {
-    const particle = document.createElement('div');
-    particle.className = 'cursor-particle';
-    particle.textContent = Math.random() > 0.5 ? '●' : '▪';
-    particle.style.left = x + 'px';
-    particle.style.top = y + 'px';
-    particle.style.color = Math.random() > 0.5 ? '#9d4edd' : '#c77dff';
-    document.body.appendChild(particle);
-    
-    let opacity = 1;
-    let y_pos = y;
-    const interval = setInterval(() => {
-      opacity -= 0.05;
-      y_pos -= 2;
-      particle.style.opacity = opacity;
-      particle.style.transform = `translateY(${y_pos - y}px)`;
-      if (opacity <= 0) {
-        clearInterval(interval);
-        particle.remove();
-      }
-    }, 30);
-  }
-</script>
+<script src="assets/js/main.js"></script>
 
 </body>
 </html>

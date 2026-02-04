@@ -65,66 +65,22 @@
   <div class="container">
     <h2>Latest Writeups</h2>
     <div class="featured-grid">
-      <a href="writeups/htb/facts.html" class="featured-card">
-        <img src="assets/media/profile.jpg" alt="Facts HTB" class="card-image">
-        <div class="card-label">HTB</div>
-        <h3>Facts</h3>
-        <p class="card-date">Feb 1, 2026</p>
-        <p class="card-desc">HackTheBox challenge writeup with detailed methodology</p>
-      </a>
+      <!-- Populated by main.js -->
     </div>
   </div>
 </section>
-</body>
+<script src="assets/js/main.js"></script>
 
-<!-- PARALLAX SCRIPT -->
-<script>
-  const heroImg = document.querySelector('.hero-image');
-  const heroCode = document.querySelector('.hero-code-dynamic');
-  const heroPrefix = document.querySelector('.hero-code-prefix');
-  
-  if (heroImg) {
-    window.addEventListener('scroll', () => {
-      const scrollPosition = window.scrollY;
-      heroImg.style.transform = `translateY(${scrollPosition}px)`;
-    });
-  }
+<!-- UPCOMING -->
+<section class="upcoming-section">
+  <div class="container">
+    <h2>Coming Soon</h2>
+    <p class="section-subtitle">Writeups in progress and planned for the future</p>
+    <div class="upcoming-grid">
+      <!-- Populated by main.js -->
+    </div>
+  </div>
+</section>
 
-  if (heroCode && heroCode.dataset.commands) {
-    let commands = [];
-
-    try {
-      commands = JSON.parse(heroCode.dataset.commands);
-    } catch (error) {
-      commands = [];
-    }
-
-    const pickCommand = () => {
-      if (!commands.length) return;
-      let next = commands[Math.floor(Math.random() * commands.length)];
-      const currentText = heroCode.textContent;
-
-      if (commands.length > 1 && next.text === currentText) {
-        const fallback = commands.filter((command) => command.text !== currentText);
-        next = fallback[Math.floor(Math.random() * fallback.length)];
-      }
-
-      heroCode.textContent = next.text;
-      heroCode.style.setProperty('--typing-width', `${Math.max(next.text.length, 10)}ch`);
-
-      if (heroPrefix) {
-        heroPrefix.style.display = next.prefix ? 'inline' : 'none';
-      }
-    };
-
-    pickCommand();
-
-    heroCode.addEventListener('animationiteration', (event) => {
-      if (event.animationName === 'typing') {
-        pickCommand();
-      }
-    });
-  }
-</script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+title: voidwr
+description: Cybersecurity Writeups & CTF Solutions
+baseurl: ""
+url: "https://voidwr.github.io"
+repository: makrjames/GitSite
+
+theme: minima
+plugins:
+  - jekyll-feed
+
+collections:
+  writeups:
+    output: true
+    permalink: /writeups/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: "writeups"
+    values:
+      layout: "post"
+
+exclude:
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+
+markdown: kramdown

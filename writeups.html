@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - Writeups</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="writeups.html" class="nav-link active">📝 Writeups</a></li>
+    <li><a href="about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="writeups-hero" style="background-image: url('assets/media/banner.jpg'); background-size: cover; background-position: center;">
+  <h1>Writeups Collection</h1>
+  <p class="hero-easter-egg" id="heroTip"></p>
+</section>
+
+<!-- WRITEUPS CONTAINER -->
+<section class="writeups-container">
+  <a href="index.html" class="writeups-back-link">Back to Home</a>
+
+  <!-- SEARCH BAR -->
+  <div class="writeups-search-bar">
+    <input type="text" id="searchInput" class="writeups-search-input" placeholder="Search by name or tag...">
+    <span class="writeups-search-icon">🔍</span>
+  </div>
+
+  <!-- HTB CATEGORY -->
+  <div class="category-section">
+    <h2 class="category-title">🔒 HackTheBox</h2>
+    <div class="writeups-list">
+      <div class="writeups-item">
+        <div class="writeups-label">HTB</div>
+        <h3>Facts</h3>
+        <p class="writeups-date">Feb 1, 2026</p>
+        <p class="writeups-desc">Comprehensive writeup on the Facts machine covering reconnaissance, exploitation, and privilege escalation techniques.</p>
+        <div class="writeups-tags">
+          <span class="writeups-tag">recon</span>
+          <span class="writeups-tag">linux</span>
+          <span class="writeups-tag">privesc</span>
+        </div>
+        <span class="writeups-status published">Published</span>
+      </div>
+      <div class="writeups-item">
+        <div class="writeups-label">HTB</div>
+        <h3>Photobomb</h3>
+        <p class="writeups-date">In Progress</p>
+        <p class="writeups-desc">Web challenge exploitation focusing on common vulnerabilities and bypass techniques.</p>
+        <div class="writeups-tags">
+          <span class="writeups-tag">web</span>
+          <span class="writeups-tag">exploitation</span>
+          <span class="writeups-tag">bypass</span>
+        </div>
+        <span class="writeups-status in-progress">In Progress</span>
+      </div>
+      <div class="writeups-item">
+        <div class="writeups-label">HTB</div>
+        <h3>Coming Soon...</h3>
+        <p class="writeups-date">To be announced</p>
+        <p class="writeups-desc">More HackTheBox challenges and detailed walkthroughs coming soon.</p>
+        <div class="writeups-tags">
+          <span class="writeups-tag">htb</span>
+        </div>
+        <span class="writeups-status planned">Planned</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRYHACKME CATEGORY -->
+  <div class="writeups-category-section">
+    <h2 class="writeups-category-title">🎯 TryHackMe</h2>
+    <div class="writeups-list">
+      <div class="writeups-item">
+        <div class="writeups-label">THM</div>
+        <h3>Linux Privilege Escalation</h3>
+        <p class="writeups-date">Planned</p>
+        <p class="writeups-desc">Complete methodology and enumeration techniques for identifying and exploiting privilege escalation vectors.</p>
+        <div class="writeups-tags">
+          <span class="writeups-tag">linux</span>
+          <span class="writeups-tag">privesc</span>
+          <span class="writeups-tag">enumeration</span>
+        </div>
+        <span class="writeups-status planned">Planned</span>
+      </div>
+      <div class="writeups-item">
+        <div class="writeups-label">THM</div>
+        <h3>Web Security Fundamentals</h3>
+        <p class="writeups-date">Planned</p>
+        <p class="writeups-desc">Deep dive into OWASP Top 10 vulnerabilities and how to identify them in real-world applications.</p>
+        <div class="writeups-tags">
+          <span class="writeups-tag">web</span>
+          <span class="writeups-tag">owasp</span>
+          <span class="writeups-tag">security</span>
+        </div>
+        <span class="writeups-status planned">Planned</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  // Matrix-style cursor particles
+  const particles = [];
+  
+  document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.8) {
+      createParticle(e.clientX, e.clientY);
+    }
+  });
+
+  function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.className = 'cursor-particle';
+    particle.textContent = Math.random() > 0.5 ? '●' : '▪';
+    particle.style.left = x + 'px';
+    particle.style.top = y + 'px';
+    particle.style.color = Math.random() > 0.5 ? '#9d4edd' : '#c77dff';
+    document.body.appendChild(particle);
+    
+    let opacity = 1;
+    let y_pos = y;
+    const interval = setInterval(() => {
+      opacity -= 0.05;
+      y_pos -= 2;
+      particle.style.opacity = opacity;
+      particle.style.transform = `translateY(${y_pos - y}px)`;
+      if (opacity <= 0) {
+        clearInterval(interval);
+        particle.remove();
+      }
+    }, 30);
+  }
+
+  // Easter egg: Random terminal tips
+  const tips = [
+    'nmap -A target.com  // Always enumerate first',
+    'gobuster dir -u target.com -w wordlist.txt  // Find the hidden',
+    'nc -lvnp 1337  // Reverse shell listener ready',
+    'chmod +x exploit.sh && ./exploit.sh',
+    'wireshark',
+    'hydra -l admin -P passwords.txt ftp://target.com',
+    'burpsuite &',
+    'john --wordlist=rockyou.txt hashes.txt  // Cracked it!',
+    'echo $((16#DEADBEEF))  // Hex to decimal magic',
+    'The best vulnerability is the one you find first',
+    'grep -r "password" .  // Secrets in comments',
+  ];
+
+  function displayRandomTip() {
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    const tipElement = document.getElementById('heroTip');
+    if (tipElement) {
+        tipElement.textContent = "$> " + tip;
+      tipElement.style.animation = 'fadeInUp 0.8s ease forwards';
+    }
+  }
+
+  // Show tip on page load
+  displayRandomTip();
+  
+  // Change tip every 8 seconds
+  setInterval(displayRandomTip, 8000);
+
+  // SEARCH AND FILTER FUNCTIONALITY
+  const searchInput = document.getElementById('searchInput');
+  const writeupItems = document.querySelectorAll('.writeups-item');
+  const categories = document.querySelectorAll('.category-section, .writeups-category-section');
+
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    let hasVisibleItems = false;
+
+    writeupItems.forEach(item => {
+      const title = item.querySelector('h3').textContent.toLowerCase();
+      const desc = item.querySelector('.writeups-desc').textContent.toLowerCase();
+      const tags = Array.from(item.querySelectorAll('.writeups-tag')).map(tag => tag.textContent.toLowerCase());
+      
+      const matches = title.includes(searchTerm) || 
+                     desc.includes(searchTerm) || 
+                     tags.some(tag => tag.includes(searchTerm));
+
+      if (matches || searchTerm === '') {
+        item.classList.remove('hidden');
+        hasVisibleItems = true;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    // Hide empty category sections
+    categories.forEach(category => {
+      const visibleItems = category.querySelectorAll('.writeups-item:not(.hidden)');
+      if (visibleItems.length === 0) {
+        category.classList.add('empty');
+      } else {
+        category.classList.remove('empty');
+      }
+    });
+  });
+
+  // Click tags to search
+  document.querySelectorAll('.writeups-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      searchInput.value = tag.textContent.toLowerCase();
+      searchInput.dispatchEvent(new Event('input'));
+    });
+  });
+</script>
+
+</body>
+</html>

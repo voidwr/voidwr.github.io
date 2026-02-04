@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - voidwr</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="about.html" class="nav-link active">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero" style="background-image: url('assets/media/banner.jpg'); background-size: cover; background-position: center;">
+  <h1>About Me</h1>
+</section>
+
+<!-- ABOUT CONTAINER -->
+<section class="about-container">
+  <a href="index.html" class="writeups-back-link">Back to Home</a>
+
+  <!-- TWO COLUMN LAYOUT -->
+  <div class="about-sections">
+    <!-- ABOUT CONTENT -->
+    <div class="about-content">
+      <h2>Who Am I?</h2>
+      <p>
+        I'm a cybersecurity enthusiast passionate about penetration testing, CTF challenges, and vulnerability research. 
+        My journey in cybersecurity started with a curiosity about how systems work and how to secure them. 
+        I dedicate my time to learning new techniques, documenting my findings, and sharing knowledge with the community.
+      </p>
+      <p>
+        Through platforms like HackTheBox, TryHackMe, and CTF competitions, I continuously sharpen my skills in 
+        areas including network penetration testing, web application security, privilege escalation, and cryptography.
+      </p>
+      <p>
+        This portfolio serves as a documentation of my learning journey and a resource for others interested in cybersecurity. 
+        Each writeup represents a challenge overcome and a lesson learned.
+      </p>
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="social-section">
+      <h3>Let's Connect</h3>
+      
+      <!-- PROFILE SECTION -->
+      <div class="about-profile-section">
+        <img src="assets/media/profile.jpg" alt="Profile Picture" class="about-profile-pic">
+        <h2 class="about-profile-name">voidwr</h2>
+        <p class="about-profile-subtitle">Cybersecurity Enthusiast | CTF Player | Penetration Tester</p>
+        
+        <div class="about-social-links">
+          <a href="https://github.com/makrjames" target="_blank" class="about-social-link">
+            <div class="about-social-icon"><i class="fab fa-github"></i></div>
+            <span class="about-social-label">GitHub</span>
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="about-social-link">
+            <div class="about-social-icon"><i class="fab fa-linkedin"></i></div>
+            <span class="about-social-label">LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Matrix-style cursor particles
+  const particles = [];
+  
+  document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.8) {
+      createParticle(e.clientX, e.clientY);
+    }
+  });
+
+  function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.className = 'cursor-particle';
+    particle.textContent = Math.random() > 0.5 ? '●' : '▪';
+    particle.style.left = x + 'px';
+    particle.style.top = y + 'px';
+    particle.style.color = Math.random() > 0.5 ? '#9d4edd' : '#c77dff';
+    document.body.appendChild(particle);
+    
+    let opacity = 1;
+    let y_pos = y;
+    const interval = setInterval(() => {
+      opacity -= 0.05;
+      y_pos -= 2;
+      particle.style.opacity = opacity;
+      particle.style.transform = `translateY(${y_pos - y}px)`;
+      if (opacity <= 0) {
+        clearInterval(interval);
+        particle.remove();
+      }
+    }, 30);
+  }
+</script>
+
+</body>
+</html>

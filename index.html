@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="#home" class="nav-link active">🏠 Home</a></li>
+    <li><a href="writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO IMAGE -->
+<section class="hero-image-section">
+  <video class="hero-image" autoplay muted loop playsinline>
+    <source src="assets/media/hero-banner.mp4" type="video/mp4">
+  </video>
+  <div class="hero-image-overlay"></div>
+  <div class="hero-image-content">
+    <h1>voidwr</h1>
+    <p class="hero-code-typing">
+      <span class="hero-code-prefix">kali@kali$&gt;</span>
+      <span class="hero-code-dynamic" data-commands='[{"text":"nmap -sC -sV -oA recon target.local","prefix":true},
+      {"text":"gobuster dir -u http://target.local -w wordlist.txt","prefix":true},
+      {"text":"ffuf -u http://target.local/FUZZ -w common.txt","prefix":true},
+      {"text":"sqlmap -u http://target.local/login --batch","prefix":true},
+      {"text":"ssh user@target.local","prefix":true},
+      {"text":"nikto -h http://target.local","prefix":true},
+      {"text":"mainframe hacked","prefix":false},
+      {"text":"kernel panic","prefix":false},
+      {"text":"access granted","prefix":false},
+      {"text":"payload delivered","prefix":false},
+      {"text":"The quieter you become, the more you are able to hear.","prefix":false},
+      {"text":"nmap -sC -sV -oA recon target.local", "prefix":true},
+      {"text":":(){ :|: & };:", "prefix":false},
+      {"text":"Wake up Neo...", "prefix":false}]'></span>
+    </p>
+  </div>
+</section>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-image-frame">
+      <img src="assets/media/profile.jpg" alt="voidwr profile" class="hero-profile-img">
+    </div>
+    <div class="hero-text">
+      <h1>voidwr</h1>
+      <p class="tagline">Cybersecurity Writeups</p>
+      <p class="description">In-depth solutions, techniques, and learnings from Capture The Flag competitions and security challenges</p>
+      <a href="#writeups" class="cta-button">Explore Writeups</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured-section">
+  <div class="container">
+    <h2>Latest Writeups</h2>
+    <div class="featured-grid">
+      <a href="writeups/htb/facts.html" class="featured-card">
+        <img src="assets/media/profile.jpg" alt="Facts HTB" class="card-image">
+        <div class="card-label">HTB</div>
+        <h3>Facts</h3>
+        <p class="card-date">Feb 1, 2026</p>
+        <p class="card-desc">HackTheBox challenge writeup with detailed methodology</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+</body>
+
+<!-- PARALLAX SCRIPT -->
+<script>
+  const heroImg = document.querySelector('.hero-image');
+  const heroCode = document.querySelector('.hero-code-dynamic');
+  const heroPrefix = document.querySelector('.hero-code-prefix');
+  
+  if (heroImg) {
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      heroImg.style.transform = `translateY(${scrollPosition}px)`;
+    });
+  }
+
+  if (heroCode && heroCode.dataset.commands) {
+    let commands = [];
+
+    try {
+      commands = JSON.parse(heroCode.dataset.commands);
+    } catch (error) {
+      commands = [];
+    }
+
+    const pickCommand = () => {
+      if (!commands.length) return;
+      let next = commands[Math.floor(Math.random() * commands.length)];
+      const currentText = heroCode.textContent;
+
+      if (commands.length > 1 && next.text === currentText) {
+        const fallback = commands.filter((command) => command.text !== currentText);
+        next = fallback[Math.floor(Math.random() * fallback.length)];
+      }
+
+      heroCode.textContent = next.text;
+      heroCode.style.setProperty('--typing-width', `${Math.max(next.text.length, 10)}ch`);
+
+      if (heroPrefix) {
+        heroPrefix.style.display = next.prefix ? 'inline' : 'none';
+      }
+    };
+
+    pickCommand();
+
+    heroCode.addEventListener('animationiteration', (event) => {
+      if (event.animationName === 'typing') {
+        pickCommand();
+      }
+    });
+  }
+</script>
+</body>
+</html>

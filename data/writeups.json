@@ -1,50 +1,54 @@
 [
   {
-    "id": "facts",
+    "id": "template1",
     "category": "HackTheBox",
-    "categoryEmoji": "🔒",
+    "categoryEmoji": "",
     "categoryShort": "HTB",
-    "title": "Facts",
+    "title": "Template 1",
     "date": "Feb 1, 2026",
-    "description": "Comprehensive writeup on the Facts machine covering reconnaissance, exploitation, and privilege escalation techniques.",
+    "description": "Sample writeup template - replace with your actual writeup content",
+    "image": "assets/media/featured/banner.jpg",
     "tags": ["recon", "linux", "privesc"],
     "status": "published",
-    "path": "writeups/htb/facts.html"
+    "path": "writeups/htb/template1.html"
   },
-  {
-    "id": "photobomb",
+    {
+    "id": "template1-2",
     "category": "HackTheBox",
-    "categoryEmoji": "🔒",
+    "categoryEmoji": "",
     "categoryShort": "HTB",
-    "title": "Photobomb",
-    "date": "In Progress",
-    "description": "Web challenge exploitation focusing on common vulnerabilities and bypass techniques.",
-    "tags": ["web", "exploitation", "bypass"],
-    "status": "in-progress",
-    "path": "writeups/htb/photobomb.html"
+    "title": "Template 1-2",
+    "date": "Feb 1, 2026",
+    "description": "Sample writeup template - replace with your actual writeup content",
+    "image": "assets/media/featured/banner.jpg",
+    "tags": ["recon", "linux", "privesc"],
+    "status": "published",
+    "path": "writeups/htb/template1.html"
   },
   {
-    "id": "linux-privesc",
+    "id": "template2",
     "category": "TryHackMe",
-    "categoryEmoji": "🎯",
+    "categoryEmoji": "",
     "categoryShort": "THM",
-    "title": "Linux Privilege Escalation",
-    "date": "Planned",
-    "description": "Complete methodology and enumeration techniques for identifying and exploiting privilege escalation vectors.",
-    "tags": ["linux", "privesc", "enumeration"],
-    "status": "planned",
-    "path": "writeups/thm/linux-privesc.html"
+    "title": "Template 2",
+    "date": "Feb 2, 2026",
+    "description": "Sample writeup template - replace with your actual writeup content",
+    "image": "assets/media/featured/banner.jpg",
+    "tags": ["web", "sql", "enumeration"],
+    "status": "published",
+    "path": "writeups/thm/template2.html"
   },
   {
-    "id": "web-security",
-    "category": "TryHackMe",
-    "categoryEmoji": "🎯",
-    "categoryShort": "THM",
-    "title": "Web Security Fundamentals",
-    "date": "Planned",
-    "description": "Deep dive into OWASP Top 10 vulnerabilities and how to identify them in real-world applications.",
-    "tags": ["web", "owasp", "security"],
-    "status": "planned",
-    "path": "writeups/thm/web-security.html"
+    "id": "template3",
+    "category": "CTF",
+    "categoryEmoji": "",
+    "categoryShort": "CTF",
+    "title": "Template 3",
+    "date": "Feb 3, 2026",
+    "description": "Sample writeup template - replace with your actual writeup content",
+    "image": "assets/media/featured/banner.jpg",
+    "tags": ["crypto", "forensics", "pwn"],
+    "status": "published",
+    "path": "writeups/ctf/template3.html"
   }
 ]

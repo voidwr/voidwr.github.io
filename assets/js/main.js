@@ -61,7 +61,7 @@ function initTypingHero() {
 }
 
 function initCursorParticles() {
-  const shouldEnable = document.querySelector('.writeups-container') || document.querySelector('.about-container');
+  const shouldEnable = document.querySelector('.hero-image-section') || document.querySelector('.writeups-container') || document.querySelector('.about-container');
   if (!shouldEnable) return;
 
   document.addEventListener('mousemove', (e) => {
@@ -99,17 +99,18 @@ function initHeroTips() {
   if (!tipElement) return;
 
   const tips = [
-    'nmap -A target.com  // Always enumerate first',
-    'gobuster dir -u target.com -w wordlist.txt  // Find the hidden',
+    'nmap -A target.com  // Always scan first',
+    'gobuster dir -u target.com -w wordlist.txt',
     'nc -lvnp 1337  // Reverse shell listener ready',
     'chmod +x exploit.sh && ./exploit.sh',
-    'wireshark',
+    'wireshark &',
     'hydra -l admin -P passwords.txt ftp://target.com',
     'burpsuite &',
     'john --wordlist=rockyou.txt hashes.txt  // Cracked it!',
     'echo $((16#DEADBEEF))  // Hex to decimal magic',
     'The best vulnerability is the one you find first',
     'grep -r "password" .  // Secrets in comments',
+    "Keep calm and sudo -l"
   ];
 
   function displayRandomTip() {
@@ -170,22 +171,25 @@ async function loadFeaturedFromConfig() {
     const response = await fetch('../data/writeups.json');
     const writeups = await response.json();
     
-    // Find first published writeup
-    const featured = writeups.find(wp => wp.status === 'published');
-    if (!featured) return;
+    // Get all published writeups (max 3)
+    const featured = writeups.filter(wp => wp.status === 'published').slice(0, 3);
+    if (featured.length === 0) return;
 
     const grid = document.querySelector('.featured-grid');
     if (!grid) return;
 
-    grid.innerHTML = `
-      <a href="${featured.path}" class="featured-card">
-        <img src="assets/media/featured/banner.jpg" alt="${featured.title}" class="card-image">
-        <div class="card-label">${featured.categoryShort}</div>
-        <h3>${featured.title}</h3>
-        <p class="card-date">${featured.date}</p>
-        <p class="card-desc">${featured.description}</p>
+    grid.innerHTML = featured.map(wp => `
+      <a href="${wp.path}" class="featured-card">
+        <img src="assets/media/featured/banner.jpg" alt="${wp.title}" class="card-image">
+        <div class="card-label">${wp.categoryShort}</div>
+        <h3>${wp.title}</h3>
+        <p class="card-date">${wp.date}</p>
+        <p class="card-desc">${wp.description}</p>
+        <div class="card-tags">
+          ${wp.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+        </div>
       </a>
-    `;
+    `).join('');
   } catch (error) {
     console.error('Error loading featured writeup:', error);
   }
@@ -233,17 +237,21 @@ async function loadWriteupsFromConfig() {
       list.className = 'writeups-list';
 
       data.items.forEach(wp => {
-        const item = document.createElement('div');
+        const item = document.createElement('a');
         item.className = 'writeups-item';
+        item.href = wp.path;
         item.innerHTML = `
-          <div class="writeups-label">${wp.categoryShort}</div>
-          <h3>${wp.title}</h3>
-          <p class="writeups-date">${wp.date}</p>
-          <p class="writeups-desc">${wp.description}</p>
-          <div class="writeups-tags">
-            ${wp.tags.map(tag => `<span class="writeups-tag">${tag}</span>`).join('')}
+          <img src="${wp.image || 'assets/media/featured/banner.jpg'}" alt="${wp.title}" class="writeups-item-image">
+          <div class="writeups-item-body">
+            <div class="writeups-label">${wp.categoryShort}</div>
+            <h3>${wp.title}</h3>
+            <p class="writeups-date">${wp.date}</p>
+            <p class="writeups-desc">${wp.description}</p>
+            <div class="writeups-tags">
+              ${wp.tags.map(tag => `<span class="writeups-tag">${tag}</span>`).join('')}
+            </div>
+            <span class="writeups-status ${wp.status}">${wp.status === 'published' ? 'Published' : wp.status === 'in-progress' ? 'In Progress' : 'Planned'}</span>
           </div>
-          <span class="writeups-status ${wp.status}">${wp.status === 'published' ? 'Published' : wp.status === 'in-progress' ? 'In Progress' : 'Planned'}</span>
         `;
         list.appendChild(item);
       });

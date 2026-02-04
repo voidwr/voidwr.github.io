@@ -1,24 +1,24 @@
 [
   {
     "id": "upcoming1",
-    "title": "Photobomb",
-    "description": "Web challenge exploitation techniques",
+    "title": "Upcoming 1",
+    "description": "Sample upcoming writeup - replace with your content",
     "category": "HackTheBox",
     "status": "in-progress",
     "image": "assets/media/upcoming/banner.jpg"
   },
   {
     "id": "upcoming2",
-    "title": "Linux Privilege Escalation",
-    "description": "Complete methodology and common vectors",
+    "title": "Upcoming 2",
+    "description": "Sample upcoming writeup - replace with your content",
     "category": "TryHackMe",
     "status": "planned",
     "image": "assets/media/upcoming/banner.jpg"
   },
   {
     "id": "upcoming3",
-    "title": "PicoCTF 2026",
-    "description": "Selected challenges and solutions",
+    "title": "Upcoming 3",
+    "description": "Sample upcoming writeup - replace with your content",
     "category": "CTF",
     "status": "planned",
     "image": "assets/media/upcoming/banner.jpg"

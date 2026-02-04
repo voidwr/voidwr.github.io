@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>voidwr</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -27,20 +28,22 @@
     <h1>voidwr</h1>
     <p class="hero-code-typing">
       <span class="hero-code-prefix">kali@kali$&gt;</span>
-      <span class="hero-code-dynamic" data-commands='[{"text":"nmap -sC -sV -oA recon target.local","prefix":true},
+      <span class="hero-code-dynamic" data-commands='[
+      {"text":"nmap -sC -sV -oA recon target.local","prefix":true},
       {"text":"gobuster dir -u http://target.local -w wordlist.txt","prefix":true},
       {"text":"ffuf -u http://target.local/FUZZ -w common.txt","prefix":true},
       {"text":"sqlmap -u http://target.local/login --batch","prefix":true},
       {"text":"ssh user@target.local","prefix":true},
       {"text":"nikto -h http://target.local","prefix":true},
       {"text":"mainframe hacked","prefix":false},
-      {"text":"kernel panic","prefix":false},
+      {"text":"Kernel Panic: Fatal exception","prefix":false},
       {"text":"access granted","prefix":false},
       {"text":"payload delivered","prefix":false},
       {"text":"The quieter you become, the more you are able to hear.","prefix":false},
       {"text":"nmap -sC -sV -oA recon target.local", "prefix":true},
       {"text":":(){ :|: & };:", "prefix":false},
-      {"text":"Wake up Neo...", "prefix":false}]'></span>
+      {"text":"Wake up Neo...", "prefix":false}
+      ]'></span>
     </p>
   </div>
 </section>
@@ -48,14 +51,24 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-image-frame">
-      <img src="assets/media/profile.jpg" alt="voidwr profile" class="hero-profile-img">
+    <div class="hero-profile-container">
+      <div class="hero-image-frame">
+        <img src="assets/media/profile.jpg" alt="voidwr profile" class="hero-profile-img">
+      </div>
+      <div class="hero-profile-socials">
+        <a href="https://github.com/makrjames" target="_blank" class="hero-social-icon">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/dimitris-makridis/" target="_blank" class="hero-social-icon">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </div>
     </div>
     <div class="hero-text">
       <h1>voidwr</h1>
       <p class="tagline">Cybersecurity Writeups</p>
       <p class="description">In-depth solutions, techniques, and learnings from Capture The Flag competitions and security challenges</p>
-      <a href="#writeups" class="cta-button">Explore Writeups</a>
+      <a href="writeups.html" class="cta-button">Explore Writeups</a>
     </div>
   </div>
 </section>

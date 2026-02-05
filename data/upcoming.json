@@ -5,7 +5,7 @@
     "description": "Sample upcoming writeup - replace with your content",
     "category": "HackTheBox",
     "status": "in-progress",
-    "image": "assets/media/upcoming/banner.jpg"
+    "image": "assets/media/logos/upcoming/banner.jpg"
   },
   {
     "id": "upcoming2",
@@ -13,7 +13,7 @@
     "description": "Sample upcoming writeup - replace with your content",
     "category": "TryHackMe",
     "status": "planned",
-    "image": "assets/media/upcoming/banner.jpg"
+    "image": "assets/media/logos/upcoming/banner.jpg"
   },
   {
     "id": "upcoming3",
@@ -21,6 +21,6 @@
     "description": "Sample upcoming writeup - replace with your content",
     "category": "CTF",
     "status": "planned",
-    "image": "assets/media/upcoming/banner.jpg"
+    "image": "assets/media/logos/upcoming/banner.jpg"
   }
 ]

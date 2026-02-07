@@ -1258,3 +1258,199 @@ body {
   font-weight: 600;
 }
 
+@media (max-width: 1024px) {
+  .hero-content {
+    gap: 3rem;
+  }
+
+  .container {
+    padding: 2rem 1.5rem;
+  }
+
+  .featured-card {
+    width: 100%;
+  }
+
+  .writeups-hero {
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    left: 0;
+    right: 0;
+    padding: 1rem 1.25rem;
+    background: rgba(11, 11, 12, 0.85);
+    backdrop-filter: blur(6px);
+  }
+
+  .nav-menu {
+    justify-content: center;
+    gap: 1rem;
+    max-width: 100%;
+  }
+
+  .nav-link {
+    font-size: 0.85rem;
+  }
+
+  .hero-image-section {
+    height: 70vh;
+  }
+
+  .hero-image-content h1 {
+    font-size: 3rem;
+  }
+
+  .hero-code-typing {
+    font-size: 0.9rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-code-dynamic {
+    --typing-width: 22ch;
+  }
+
+  .hero {
+    padding: 3rem 1.5rem;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .tagline {
+    font-size: 1.1rem;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+
+  .cta-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .featured-grid {
+    gap: 1.5rem;
+  }
+
+  .featured-card {
+    width: 100%;
+  }
+
+  .featured-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .upcoming-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .upcoming-grid {
+    gap: 1.5rem;
+  }
+
+  .writeups-hero {
+    height: 45vh;
+    background-attachment: scroll;
+  }
+
+  .writeups-hero h1 {
+    font-size: 2.6rem;
+    text-align: center;
+  }
+
+  .writeups-container {
+    padding: 3rem 1.5rem;
+  }
+
+  .writeups-list {
+    grid-template-columns: 1fr;
+  }
+
+  .writeups-category-title {
+    font-size: 1.5rem;
+  }
+
+  .about-hero h1 {
+    font-size: 2.6rem;
+  }
+
+  .about-container {
+    padding: 3rem 1.5rem;
+  }
+
+  .about-content,
+  .social-section {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-menu {
+    gap: 0.6rem;
+  }
+
+  .nav-link {
+    font-size: 0.8rem;
+  }
+
+  .hero-image-frame {
+    width: 150px;
+    height: 150px;
+  }
+
+  .hero-social-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .hero-image-content h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .featured-section h2,
+  .upcoming-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .featured-card h3,
+  .upcoming-card h3 {
+    font-size: 1.2rem;
+  }
+}
+

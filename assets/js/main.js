@@ -281,15 +281,17 @@ async function loadUpcomingFromConfig() {
     upcoming.forEach(item => {
       const card = document.createElement('div');
       card.className = 'upcoming-card';
+      const statusText = item.status === 'in-progress' ? 'In Progress' : item.status === 'locked' ? 'Locked' : 'Planned';
       card.innerHTML = `
         <img src="${item.image}" alt="${item.title}" class="card-image">
         <div class="card-label upcoming-label">${item.category}</div>
         <h3>${item.title}</h3>
-        <p class="card-status">${item.status === 'in-progress' ? 'In Progress' : 'Planned'}</p>
+        <p class="card-status">${statusText}</p>
         <p class="card-desc">${item.description}</p>
       `;
       grid.appendChild(card);
     });
+
   } catch (error) {
     console.error('Error loading upcoming:', error);
   }

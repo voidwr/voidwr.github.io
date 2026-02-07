@@ -7,9 +7,14 @@
     "title": "Expressway",
     "date": "Feb 6, 2026",
     "description": "Expressway is an easy HackTheBox machine that has intricate vulnerabilities",
-    "bannerImage": "/writeups/htb/expressway/media/banner.png",
-    "tags": ["linux","htb","easy","ike"],
+    "bannerImage": "/writeups/htb/expressway/media/expressway.png",
+    "tags": [
+      "linux",
+      "htb",
+      "easy",
+      "ike"
+    ],
     "status": "published",
-      "path": "writeups/htb/expressway/expressway.html"
+    "path": "writeups/htb/expressway/expressway.html"
   }
 ]

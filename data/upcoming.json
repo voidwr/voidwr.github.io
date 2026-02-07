@@ -3,24 +3,8 @@
     "id": "upcoming1",
     "title": "Upcoming 1",
     "description": "Sample upcoming writeup - replace with your content",
-    "category": "HackTheBox",
-    "status": "in-progress",
-    "image": "assets/media/logos/upcoming/banner.jpg"
-  },
-  {
-    "id": "upcoming2",
-    "title": "Upcoming 2",
-    "description": "Sample upcoming writeup - replace with your content",
-    "category": "TryHackMe",
-    "status": "planned",
-    "image": "assets/media/logos/upcoming/banner.jpg"
-  },
-  {
-    "id": "upcoming3",
-    "title": "Upcoming 3",
-    "description": "Sample upcoming writeup - replace with your content",
-    "category": "CTF",
-    "status": "planned",
+    "category": "HTB",
+    "status": "waiting",
     "image": "assets/media/logos/upcoming/banner.jpg"
   }
 ]

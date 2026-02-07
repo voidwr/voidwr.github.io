@@ -18,12 +18,12 @@
 </nav>
 
 <!-- WRITEUP CONTENT -->
-<section class="writeup-hero" style="background-image: url('../../assets/media/featured/banner.jpg');">
+<section class="writeup-hero" style="background-image: url('../../assets/media/logos/featured/banner.jpg');">
   <div class="writeup-hero-overlay"></div>
   <div class="writeup-hero-content">
     <h1>Template 1</h1>
     <p class="writeup-subtitle">Sample Writeup Template</p>
-    <img src="../../assets/media/logos/htb/template1logo.jpg" alt="Template 1 Logo" class="writeup-machine-logo">
+    <img src="../../assets/media/logos/htb/template1logo.png" alt="Template 1 Logo" class="writeup-machine-logo">
   </div>
 </section>
 
@@ -32,6 +32,11 @@
   
   <div class="writeup-body">
     <h2>Overview</h2>
+    <div class="writeup-banner-full-width">
+      <a href="https://example.com/achievement" target="_blank">
+        <img src="/assets/media/placeholder-banner.png" alt="Achievement Banner" class="writeup-banner-link">
+      </a>
+    </div>
     <p>This is a sample writeup template. Replace this content with your actual writeup.</p>
 
     <h2>Reconnaissance</h2>
@@ -44,6 +49,12 @@
 
     <h2>Privilege Escalation</h2>
     <p>Describe the privilege escalation path you used.</p>
+    <p>
+      PoC credits: <strong id="template-user1" class="inline-spoiler" hidden>pr0v3rbs</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="template-user1">
+        Show </button> and 
+      <strong id="template-user2" class="inline-spoiler" hidden>RuoJi6</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="template-user2">
+        Show </button>
+    </p>
 
     <h2>Key Takeaways</h2>
     <ul>
@@ -68,7 +79,7 @@ gobuster dir -u http://target.local -w /usr/share/wordlists/dirbuster/directory-
     <!-- ===== SPOILER/FLAG SECTION ===== -->
     <h2>Flag & Solutions</h2>
     <p>Click to reveal the flag or solution:</p>
-    <button class="spoiler-toggle" data-spoiler-id="flag-spoiler-1">
+    <button class="spoiler-toggle" data-spoiler-id="flag-spoiler-1" title="Click to reveal flag">
       🔒 Reveal Flag
     </button>
     <div class="spoiler-content" id="flag-spoiler-1">
@@ -103,11 +114,18 @@ gobuster dir -u http://target.local -w /usr/share/wordlists/dirbuster/directory-
     <div class="warning-box">
       <strong>⚠️ Warning:</strong> Some versions of this application have rate limiting. Use appropriate delays between requests.
     </div>
+    <div class="mitigation-box">
+      <strong>✅ Mitigation:</strong> Apply vendor patches and harden permissions to reduce privilege escalation risk.
+    </div>
 
     <!-- ===== ADDITIONAL SPOILERS ===== -->
     <h2>Additional Solutions</h2>
-    <button class="spoiler-toggle" data-spoiler-id="privesc-spoiler-1">
-      🔒 Privilege Escalation Method
+    <p>
+      Inline credit: <strong id="privesc-inline-1" class="inline-spoiler" hidden>pr0v3rbs</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="privesc-inline-1">Show</button>
+      and <strong id="privesc-inline-2" class="inline-spoiler" hidden>RuoJi6</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="privesc-inline-2">Show</button>
+    </p>
+    <button class="spoiler-toggle" data-spoiler-id="privesc-spoiler-1" data-no-confirm="true" title="Click to reveal privilege escalation method">
+      Spoiler
     </button>
     <div class="spoiler-content" id="privesc-spoiler-1">
       <p>The privilege escalation vector involves exploiting a misconfigured SUID binary. The binary allows arbitrary command execution as root through parameter injection.</p>
@@ -115,6 +133,13 @@ gobuster dir -u http://target.local -w /usr/share/wordlists/dirbuster/directory-
         <div class="code-header">bash</div>
         <pre><code>./vulnerable_binary "'; cat /root/flag.txt; '"</code></pre>
       </div>
+    </div>
+
+    <button class="spoiler-toggle" data-spoiler-id="privesc-spoiler-2" data-no-confirm="true" title="Click to reveal additional information">
+      Spoiler2
+    </button>
+    <div class="spoiler-content" id="privesc-spoiler-2">
+      <p>Add your text content here.</p>
     </div>
 
     <!-- ===== KEY FINDINGS TABLE ===== -->

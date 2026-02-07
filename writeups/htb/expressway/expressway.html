@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - Expressway</title>
+  <link rel="stylesheet" href="/assets/css/writeups.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- WRITEUP CONTENT -->
+<section class="writeup-hero">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1>Expressway</h1>
+    <p class="writeup-subtitle" style="color: rgb(120, 211, 120);">Easy</p>
+    <img src="/writeups/htb/expressway/media/logo.png" alt="Expressway Logo" class="writeup-machine-logo">
+  </div>
+</section>
+
+<section class="writeup-content">
+  <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  
+  <div class="writeup-body">
+
+    <!-- OVERVIEW SECTION-->
+    <h2>Overview</h2>
+    <div class="writeup-banner-full-width">
+      <a href="https://labs.hackthebox.com/achievement/machine/2418005/736" target="_blank">
+        <img src="/writeups/htb/expressway/media/info.png" alt="Expressway Solved Banner" class="writeup-banner-link">
+      </a>
+    </div>
+    <p>Expressway is an easy HackTheBox machine focused on the Internet Key Exchange (IKE) protocol vulnerabilities. As we will see 
+      the machine has a unique attack vector that 
+      requires a combination of network reconnaissance and requires, psk handshake exchange
+      cryptographic analysis to exploit. 
+    </p>
+
+    <!-- RECONNAISSANCE SECTION-->
+    <h2>Reconnaissance</h2>
+    <p>Starting off, we need to create our working directories
+      so we change directory into our HTB folder and we do:
+      <code>mkdir expressway && mkdir recon</code> for our initial recon directory.
+      Then, we need to input the machine's ip in our <b>/etc/hosts</b> file
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/hosts.PNG" alt="/etc/hosts" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption"></p>
+      </div>
+        <div class="gallery-item">
+          <img src="/writeups/htb/expressway/media/hostsentry.png" alt="/etc/hosts entry" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 1: Hosts entry</p>
+      </div>
+      </p>
+      <p>
+      Now that the pre-work is ready we start our normal reconnaissance with nmap.
+    </p>
+    <pre><code>nmap -p- expressway.htb -oN recon/initial</code></pre>
+    <p>We specify to nmap that we want to save any output in the initial file which resides in
+      the recon directory if we need it in a later time. 
+      The -p- flag is used to specify that we want to scan all ports. 
+      Though noisy, in easy machines, it's usually the best option to get a full picture of the 
+      attack vectors.
+    </p>
+    <p>
+      Unfortunately, nmap doesn't give us much information about the machine, 
+      it only shows us that there is an open port 22 which is used for for ssh. Not much of a use
+      now since we don't have any credentials, but we can use this information later.
+
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/initial scan.PNG" alt="Initial Nmap Scan" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 2: Initial Nmap Scan Results</p>
+      </div>
+     </p> 
+      <p>
+      Since we know that port 22 runs ssh and we know we deal with a Linux
+      machine, we don't need to run a -sV scan to get 
+      the version of the service for now.
+    </p>
+    <p>We focus on UDP scans for now.
+      <pre><code>nmap -sU -p- -sV expressway.htb -oN recon/udp</code></pre>
+    </p>
+    <p>
+      The scan took some time to finish so we use the <code>-T5</code> flag to speed it up. 
+      Again, this method is noisier but still safe for an easy machine.
+    </p>
+    <p>
+      After some time, nmap returns a big list of many ports.
+    </p>
+        <button class="spoiler-toggle" data-spoiler-id="nmap-spoiler-1" data-no-confirm="true" title="Click to reveal additional information">
+      Warning - nmap dump - very long list of ports
+    </button>
+    <div class="spoiler-content" id="nmap-spoiler-1">
+      <pre class="iframe-list-class" data-src="media/nmap%20udp.txt"></pre>
+    </div>
+    <p>
+      Since we don't want to sit and look through the list for hours
+      we can use the 
+      <pre><code>cat recon/udp | grep "open" | grep -v "filtered"</code></pre>
+    </p>
+    <p>The <code>-v</code> ensures that we filter the list to show only open ports, 
+      excluding those that are filtered. And we have our open port.
+    </p>
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/nmap cat.PNG" alt="Initial Nmap Scan" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 3: Filtered open ports from UDP scan</p>
+      </div>
+    <p>
+      Based on the logo in the beginning we could infer that indeed port 500 would be open.
+      With a quick google search, we can find that port 500 is used for the Internet Key Exchange (IKE) protocol or as we can 
+      see there based on our <code>-sV</code> parameter that the service is isakmp.
+    </p>
+
+    <!-- EXPLOITATION SECTION-->
+    <h2>Exploitation</h2>
+    <p>We know that we have port 500 open which is used for the Internet Key Exchange (IKE) protocol.
+      We can use ike-scan in aggresive mode to enumerate the service and get more information about it
+      and save the output in recon/ike_key
+      <pre><code>ike-scan -A expressway.htb > recon/ike_key</code></pre>
+    </p>
+    <p>
+      The we concatenate it to see our remote user <code>ike@expressway.htb</code>
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/ikescan.PNG" alt="IKE Scan" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 4: IKE Scan Results</p>
+      </div>
+    </p>
+    <p>
+      Now all that's left is to capture the psk handshake exchange with our user as a probe and analyze 
+      it to get the pre-shared key.
+    </p>
+    <pre><code>ike-scan --id=ike@expressway.htb -Pkey.txt expressway.htb</code></pre>
+    <p>
+      <li style="list-style-type: none;">
+        <ul><code>ike-scan</code>we run the ike-scan coomand again</ul>
+        <ul><code>--id=</code> this specifies the identity to use in the probe, which is <code>ike@expressway.htb</code></ul>
+        <ul><code>-P</code> this option specifies the file to save the pre-shared key to, in this case <code>key.txt</code></ul>
+        <ul><code>expressway.htb</code> this is our target</ul>
+      </li>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/ikekey.png" alt="PSK Capture" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 5: PSK Capture Output</p>
+    </div>
+    </p>
+    <p>
+      Lastly, we need to use <code>psk-crack</code> to extract the credentials and output it in <b>cracked</b>.
+      <pre><code>sudo psk-crack -d /usr/share/wordlists/rockyou.txt key.txt</code></pre>
+    </p>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/passwordfound.PNG" alt="PSK Crack Output" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 6: PSK Crack Output</p>
+    </div>
+    <button class="spoiler-toggle" data-spoiler-id="user-password" title="Click to reveal password">
+      🔒 Reveal user password
+    </button>
+    <div class="spoiler-content" id="user-password">
+      <div class="flag-box">
+        <strong>Password:</strong> <code>freakingrockstarontheroad</code>
+      </div>
+    </div>
+    <p>
+      All that is left now is to ssh into the machine.
+    </p>
+
+    <h2>Privilege Escalation</h2>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/firstssh.png" alt="SSH Access" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 7: SSH Access</p>
+    </div>
+    <p>We got our shell and now with a simple <code>ls</code>
+      we can see the user.txt file. 
+    </p>
+    <pre><code>cat user.txt</code></pre>
+    <p>
+      and we get the user flag.
+    </p>
+    <button class="spoiler-toggle" data-spoiler-id="flag-spoiler-2" title="Click to reveal flag">
+      🔒 user.txt
+    </button>
+    <div class="spoiler-content" id="flag-spoiler-2">
+      <div class="flag-box">
+        <code>a2875db6fdb417a5e014208eb1e29e6d</code>
+        <img src="/writeups/htb/expressway/media/user.png" alt="User Flag" class="gallery-image" onclick="openImageModal(this)">
+      </div>
+    </div>
+    <p>
+      To get the root flag, we need to check for anything that we can exploit.
+      So, we start with the command <code>sudo -l</code>
+    </p>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/sudo -l.png" alt="Sudo Permissions" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 8: sudo -l output</p>
+    </div>
+    <p>
+      Unfortunately, <strong>ike</strong> does not have any sudo permissions
+      so, we move to the next best thing:
+    </p>
+    <pre><code>find / -perm 4000 -type f -ls 2>/dev/null</code></pre>
+    <p>
+      This returns SUID binaries that do not look interesting for now. Except the
+      <code>/usr/local/bin/sudo</code>. After running <code>ls -l /usr/local/bin/sudo</code> 
+      to check the permission nothing of importance came up so we will leave it be for now.
+    </p>
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/find perm.png" alt="SUID Binaries" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 9: SUID Binaries</p>
+      </div>
+    <p>
+      We have to enumerate with the next best thing which is <strong>linpeas</strong>.
+    </p>
+      <p>
+        First of all we need to get it from our machine to here, there are many ways to do it
+        but we will showcase the <code>python -m http.server 8000</code> method.
+      </p>
+      <p>
+        By spawning a simple python http server in our machine we can then use 
+        <code>wget</code> to download the linpeas script to the target machine 
+        and run it.
+      </p>
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/linpeas transfer.png" alt="Linpeas Output" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 10: Transfering Linpeas through Python</p>
+      </div>
+    <div class="note-box">
+      <strong>💡 Tip:</strong> If you don't know where to find linpeas in Kali Linux you can 
+      always type <code>linpeas</code> in the terminal and Kali will change the working
+      directory to where the script is located.
+    </div>
+    <p>
+      After we get linpeas to the target machine we do
+      <pre><code>chmod +x linpeas.sh && ./linpeas.sh</code></pre>
+    </p>
+    <p>
+      When linpeas is done, we take a look at the output and we find a pretty weird
+      entry in the <strong>System Information</strong> tab.
+    </p>
+      <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/linpeas output.PNG" alt="Linpeas SUID Findings" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 11: Linpeas Output</p>
+      </div>
+    <pre><code>Sudo version <strong>1.9.17</strong></code></pre>
+    <p>
+      A quick google search with the above parameter reveals a CVE (Common Vulnerabilities and Exposures) 
+      that allows for a local privilege escalation to root.
+    </p>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/CVE.PNG" alt="CVE Search" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 12: CVE Search Results</p>
+    </div>
+    <p>
+      <code>CVE-2025-32463</code> is a "<i><strong>critical</strong> vulnerability in sudo, that
+      allows users to gain root access via the <code>--chroot</code> or <code>-R</code>
+      option</i>" <b>(Harel A., 2025)</b>.
+    </p>
+    <p>
+      A handy PoC (Proof of Concept) is available on GitHub 
+      by users <strong id="user1" class="inline-spoiler" hidden>pr0v3rbs</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="user1">
+         Show </button> and 
+      <strong id="user2" class="inline-spoiler" hidden>RuoJi6</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="user2">
+        Show </button>
+      that exploits this vulnerability.
+    </p>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/CVE github.PNG" alt="GitHub Repository" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 13: GitHub Repository</p>
+    </div>
+    <p>
+      First we need to clone the repository to our attacker machine with
+    </p>
+      <button class="spoiler-toggle" data-spoiler-id="repo" title="Click to reveal repository">
+      🔒 Show command (shows repository)
+    </button>
+    <div class="spoiler-content" id="repo">
+      <div class="flag-box">
+        <code>git clone https://github.com/pr0v3rbs/CVE-2025-32463_chwoot.git</code>
+      </div>
+    </div>
+    <p>
+      Then it's just a matter of getting the script to the target machine,
+      and we do that by using the same python http server method we used to transfer linpeas.
+    </p>
+    <div class="gallery-item">
+      <img src="/writeups/htb/expressway/media/exploit transfer.PNG" alt="Python Server" class="gallery-image" onclick="openImageModal(this)">
+      <p class="image-caption">Figure 14: Transfering Exploit to Target Machine</p>
+    </div>
+    <p>
+      We move it to the <code>/tmp/</code> folder and make it an executable 
+      with <code>chmod +x sudo-chwoot.sh</code> and lastly, we 
+      <code>cd /tmp/ && ./sudo-chwoot.sh</code> and we see <code><strong>woot!</strong></code>
+    </p>
+    <p>
+      That's it, if we run <code>whoami</code> it outputs root.
+    </p>
+    <p>
+      Finally, we
+    </p>
+    <pre><code>cat /root/root.txt</code></pre>
+    <p>
+      and we get the root flag.
+    </p>
+    <button class="spoiler-toggle" data-spoiler-id="root-flag" title="Click to reveal root flag">
+      🔒 root.txt
+    </button>
+    <div class="spoiler-content" id="root-flag">
+      <div class="flag-box">
+        <strong>Root:</strong><code>ac5ec58ca25357c6d8df566461d9b5af</code>
+        <div class="gallery-item">
+        <img src="/writeups/htb/expressway/media/exploitworked.png" alt="Exploit Output" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 15: Exploit Output and root flag</p>
+      </div>
+      </div>
+    </div>
+
+    <!-- CONCLUSION SECTION-->
+    <h2>Conclusion</h2>
+    <p>
+      <strong>CVE-2025-32463</strong> is a local privilege escalation vulnerability in sudo <strong>(versions 1.9.14-1.9.17)</strong> 
+      that allows an unprivileged user to gain root privileges by abusing the <code>--chroot (-R)</code> option.
+      The flaw occurs because sudo resolves certain paths using the attacker-supplied chroot 
+      directory before fully evaluating the sudoers configuration. <strong>Daulaguphu</strong> 2025 states, 
+      by placing a crafted <code>nsswitch.conf</code> and malicious shared libraries inside 
+      the fake root directory, an attacker can cause sudo to load arbitrary code as root. 
+    </p>
+    <div class="mitigation-box">
+      <strong>✅ Mitigation user:</strong>
+      Avoid <strong>IKEv1 aggressive mode</strong> and enforce strong, non-guessable pre-shared keys.
+    </div>
+    <div class="mitigation-box">
+      <strong>✅ Mitigation root:</strong> use
+      <code>sudo apt-get update && sudo apt-get install --only-upgrade sudo</code>
+      for Debian/Ubuntu based distributions,
+      <code>sudo dnf update sudo</code>
+      for Red Hat/Fedora/CentOS and
+      <code>sudo zypper update sudo</code>
+      for SUSE or OpenSUSE builds.
+    </div>
+    <p>
+      Expressway is an easy machine with a unique attack vector. 
+      It introduces how IKEv1 aggressive mode can leak information 
+      that allows offline cracking of a pre-shared key, which is then used to 
+      gain initial access. The machine also demonstrates a privilege-escalation 
+      path involving an outdated sudo version that can be exploited to obtain 
+      root. Overall, it's a fun machine that teaches both VPN protocol 
+      weaknesses and local privilege escalation.
+    </p>
+
+    <!-- ===== KEY FINDINGS SECTION ===== -->
+    <h2>Key Findings</h2>
+    <table class="findings-table">
+      <thead>
+        <tr>
+          <th>Vulnerability</th>
+          <th>Severity</th>
+          <th>Impact</th>
+          <th>Remediation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sudo 1.9.17 (Outdated Version)</td>
+          <td><span class="severity-critical">Critical</span></td>
+          <td>Local privilege escalation from user to root</td>
+          <td>Update sudo binaries to the latest version</td>
+        </tr>
+        <tr>
+          <td>IKEv1 - PSK Exposure</td>
+          <td><span class="severity-high">High</span></td>
+          <td>Unauthorized access via offline PSK cracking</td>
+          <td>Disable IKEv1 aggressive mode or enforce strong authentication</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ===== TOOLS USED SECTION ===== -->
+    <h2>Tools & Resources</h2>
+    <ul>
+      <li><strong>nmap</strong> - Network mapping and port discovery</li>
+      <li><strong>ike-scan</strong> - IKE protocol scanning and analysis</li>
+      <li><strong>psk-crack</strong> - Pre-shared key cracking tool for</li>
+    </ul>
+
+    <!-- ===== REFERENCES SECTION ===== -->
+    <h2>References & Resources</h2>
+    <div class="references-grid">
+      <a href="https://tech-zealots.com/threat-lab/cve-2025-32463-sudo-exploit-detection-remediation-guide/?utm_source=copilot.com" target="_blank" class="reference-card">
+        <div class="reference-icon">🌐</div>
+        <h3>CVE-2025-32463 Critical Sudo Chroot Exploit: Complete Detection & Remediation Guide</h3>
+        <p>Daulaguphu, S. (2025, July 16). CVE-2025-32463 Sudo Exploit - Detection & Remediation Guide. Tech Zealots. https://tech-zealots.com/threat-lab/cve-2025-32463-sudo-exploit-detection-remediation-guide/?utm_source=copilot.com</p>
+        <span class="reference-link">tech-zealots.com </span>
+      </a>
+      <a href="https://www.upwind.io/feed/cve%E2%80%912025%E2%80%9132463-critical-sudo-chroot-privilege-escalation-flaw" target="_blank" class="reference-card">
+        <div class="reference-icon">🌐</div>
+        <h3>CVE-2025-32463: Critical Sudo “chroot” Privilege Escalation Flaw</h3>
+        <p>Harel, A.(2025, July 3). CVE-2025-32463: Critical Sudo “chroot” Privilege Escalation Flaw. Upwind | Cloud Security Happens at Runtime. https://www.upwind.io/feed/cve%E2%80%912025%E2%80%9132463-critical-sudo-chroot-privilege-escalation-flaw</p>
+        <span class="reference-link">upwind.io</span>
+      </a>
+      <a href="https://nvd.nist.gov/vuln/detail/cve-2025-32463" target="_blank" class="reference-card">
+        <div class="reference-icon">⚠️</div>
+        <h3>NVD -CVE-2025-32463</h3>
+        <p>NVD - cve-2025-32463. (n.d.). https://nvd.nist.gov/vuln/detail/cve-2025-32463</p>
+        <span class="reference-link">nvd.nist.gov</span>
+      </a>
+      <a href="https://github.com/pr0v3rbs/CVE-2025-32463_chwoot/tree/main" target="_blank" class="reference-card">
+        <div class="reference-icon">⚙️</div>
+        <h3>CVE-2025-32463_chwoot</h3>
+        <p>Pr0v3rbs. (n.d.). GitHub - pr0v3rbs/CVE-2025-32463_chwoot: Escalation of Privilege to the root through sudo binary with chroot option. CVE-2025-32463. GitHub. https://github.com/pr0v3rbs/CVE-2025-32463_chwoot/tree/main</p>
+        <span class="reference-link">github.com</span>
+      </a>
+    </div>
+
+    <!-- ========== END TEMPLATE SECTIONS ========== -->
+  </div>
+</section>
+
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/writeups.js"></script>
+</body>
+</html>

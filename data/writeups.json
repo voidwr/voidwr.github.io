@@ -1,54 +1,15 @@
 [
   {
-    "id": "template1",
+    "id": "Expressway",
     "category": "HackTheBox",
     "categoryEmoji": "",
     "categoryShort": "HTB",
-    "title": "Template 1",
-    "date": "Feb 1, 2026",
-    "description": "Sample writeup template - replace with your actual writeup content",
-    "image": "assets/media/logos/featured/banner.jpg",
-    "tags": ["recon", "linux", "privesc", "htb"],
+    "title": "Expressway",
+    "date": "Feb 6, 2026",
+    "description": "Expressway is an easy HackTheBox machine that has intricate vulnerabilities",
+    "bannerImage": "/writeups/htb/expressway/media/banner.png",
+    "tags": ["linux","htb","easy","ike"],
     "status": "published",
-    "path": "writeups/htb/template1.html"
-  },
-    {
-    "id": "template1-2",
-    "category": "HackTheBox",
-    "categoryEmoji": "",
-    "categoryShort": "HTB",
-    "title": "Template 1-2",
-    "date": "Feb 1, 2026",
-    "description": "Sample writeup template - replace with your actual writeup content",
-    "image": "assets/media/logos/featured/banner.jpg",
-    "tags": ["recon", "linux", "privesc", "htb"],
-    "status": "published",
-    "path": "writeups/htb/template1.html"
-  },
-  {
-    "id": "template2",
-    "category": "TryHackMe",
-    "categoryEmoji": "",
-    "categoryShort": "THM",
-    "title": "Template 2",
-    "date": "Feb 2, 2026",
-    "description": "Sample writeup template - replace with your actual writeup content",
-    "image": "assets/media/logos/featured/banner.jpg",
-    "tags": ["web", "sql", "enumeration", "thm"],
-    "status": "published",
-    "path": "writeups/thm/template2.html"
-  },
-  {
-    "id": "template3",
-    "category": "CTF",
-    "categoryEmoji": "",
-    "categoryShort": "CTF",
-    "title": "Template 3",
-    "date": "Feb 3, 2026",
-    "description": "Sample writeup template - replace with your actual writeup content",
-    "image": "assets/media/logos/featured/banner.jpg",
-    "tags": ["crypto", "forensics", "pwn", "ctf"],
-    "status": "published",
-    "path": "writeups/ctf/template3.html"
+      "path": "writeups/htb/expressway/expressway.html"
   }
 ]

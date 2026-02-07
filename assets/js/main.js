@@ -180,7 +180,7 @@ async function loadFeaturedFromConfig() {
 
     grid.innerHTML = featured.map(wp => `
       <a href="${wp.path}" class="featured-card">
-        <img src="${wp.image}" alt="${wp.title}" class="card-image">
+        <img src="${wp.bannerImage}" alt="${wp.title}" class="card-image">
         <div class="card-label">${wp.categoryShort}</div>
         <h3>${wp.title}</h3>
         <p class="card-date">${wp.date}</p>
@@ -241,7 +241,7 @@ async function loadWriteupsFromConfig() {
         item.className = 'writeups-item';
         item.href = wp.path;
         item.innerHTML = `
-          <img src="${wp.image}" alt="${wp.title}" class="writeups-item-image">
+          <img src="${wp.bannerImage}" alt="${wp.title}" class="writeups-item-image">
           <div class="writeups-item-body">
             <div class="writeups-label">${wp.categoryShort}</div>
             <h3>${wp.title}</h3>

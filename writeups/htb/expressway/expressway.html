@@ -140,7 +140,7 @@
     <pre><code>ike-scan --id=ike@expressway.htb -Pkey.txt expressway.htb</code></pre>
     <p>
       <li style="list-style-type: none;">
-        <ul><code>ike-scan</code>we run the ike-scan coomand again</ul>
+        <ul><code>ike-scan</code> we run the ike-scan command again</ul>
         <ul><code>--id=</code> this specifies the identity to use in the probe, which is <code>ike@expressway.htb</code></ul>
         <ul><code>-P</code> this option specifies the file to save the pre-shared key to, in this case <code>key.txt</code></ul>
         <ul><code>expressway.htb</code> this is our target</ul>
@@ -217,7 +217,7 @@
       We have to enumerate with the next best thing which is <strong>linpeas</strong>.
     </p>
       <p>
-        First of all we need to get it from our machine to here, there are many ways to do it
+        First of all we need to get it from our machine to our target, there are many ways to do it
         but we will showcase the <code>python -m http.server 8000</code> method.
       </p>
       <p>
@@ -325,7 +325,7 @@
       <strong>CVE-2025-32463</strong> is a local privilege escalation vulnerability in sudo <strong>(versions 1.9.14-1.9.17)</strong> 
       that allows an unprivileged user to gain root privileges by abusing the <code>--chroot (-R)</code> option.
       The flaw occurs because sudo resolves certain paths using the attacker-supplied chroot 
-      directory before fully evaluating the sudoers configuration. <strong>Daulaguphu</strong> 2025 states, 
+      directory before fully evaluating the sudoers configuration. <strong>Daulaguphu</strong> (2025) states, 
       by placing a crafted <code>nsswitch.conf</code> and malicious shared libraries inside 
       the fake root directory, an attacker can cause sudo to load arbitrary code as root. 
     </p>
@@ -380,7 +380,7 @@
     </table>
 
     <!-- ===== TOOLS USED SECTION ===== -->
-    <h2>Tools & Resources</h2>
+    <h2>Tools</h2>
     <ul>
       <li><strong>nmap</strong> - Network mapping and port discovery</li>
       <li><strong>ike-scan</strong> - IKE protocol scanning and analysis</li>
@@ -388,7 +388,7 @@
     </ul>
 
     <!-- ===== REFERENCES SECTION ===== -->
-    <h2>References & Resources</h2>
+    <h2>References</h2>
     <div class="references-grid">
       <a href="https://tech-zealots.com/threat-lab/cve-2025-32463-sudo-exploit-detection-remediation-guide/?utm_source=copilot.com" target="_blank" class="reference-card">
         <div class="reference-icon">🌐</div>

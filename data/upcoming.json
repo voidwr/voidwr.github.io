@@ -1,18 +1,2 @@
 [
-  {
-    "id": "upcoming1",
-    "title": "Upcoming 1",
-    "description": "Sample upcoming writeup - replace with your content",
-    "category": "HTB",
-    "status": "waiting",
-    "image": "assets/media/logos/upcoming/banner.jpg"
-  },
-  {
-    "id": "upcoming-codepartwo",
-    "title": "Code Part Two",
-    "description": "In compliance with Hack The Box's disclosure policy, this writeup will be made available only after the machine has been officially retired.",
-    "category": "htb",
-    "status": "locked",
-    "image": "assets/media/logos/upcoming/codepartwo.png"
-  }
 ]

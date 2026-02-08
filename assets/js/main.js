@@ -278,7 +278,7 @@ async function loadUpcomingFromConfig() {
 
     grid.innerHTML = '';
 
-    upcoming.forEach(item => {
+    upcoming.forEach((item, index) => {
       const card = document.createElement('div');
       card.className = 'upcoming-card';
       const statusText = item.status === 'in-progress' ? 'In Progress' : item.status === 'locked' ? 'Locked' : 'Planned';
@@ -290,7 +290,9 @@ async function loadUpcomingFromConfig() {
         <p class="card-desc">${item.description}</p>
       `;
       grid.appendChild(card);
+      console.log(`Added upcoming item ${index + 1}: ${item.title}`);
     });
+    console.log(`Total upcoming items displayed: ${upcoming.length}`);
 
   } catch (error) {
     console.error('Error loading upcoming:', error);

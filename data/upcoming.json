@@ -30,5 +30,13 @@
     "category": "htb",
     "status": "locked",
     "image": "assets/media/logos/upcoming/conversor.png"
+  },
+  {
+    "id": "upcoming-0xfun",
+    "title": "0xFun CTF 2026",
+    "description": "Writeups for 0xFun CTF challenges",
+    "category": "ctf",
+    "status": "planned",
+    "image": "assets/media/logos/upcoming/0xfun.png"
   }
 ]

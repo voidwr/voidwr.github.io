@@ -16,5 +16,24 @@
     ],
     "status": "published",
     "path": "writeups/htb/expressway/expressway.html"
+  },
+  {
+    "id": "codeparttwo",
+    "category": "htb",
+    "categoryEmoji": "",
+    "categoryShort": "HTB",
+    "title": "Code Part Two",
+    "date": "Feb 12, 2026",
+    "description": "Code Part Two is an easy Hack the Box machine that demonstrates how improper javascript sanitization can be dangerous for web applications",
+    "bannerImage": "/writeups/htb/codeparttwo/media/codeparttwo.png",
+    "tags": [
+      "easy",
+      "web",
+      "linux",
+      "htb",
+      "js2py"
+    ],
+    "status": "published",
+    "path": "writeups/htb/codeparttwo/codeparttwo.html"
   }
 ]

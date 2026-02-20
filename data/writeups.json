@@ -35,5 +35,21 @@
     ],
     "status": "published",
     "path": "writeups/htb/codeparttwo/codeparttwo.html"
+  },
+  {
+    "id": "0xfun",
+    "category": "ctf",
+    "categoryEmoji": "",
+    "categoryShort": "CTF",
+    "title": "0xFun CTF 2026",
+    "date": "Feb 20, 2026",
+    "description": "Writeups for some of 0xFun CTF challenges from 12/2/2026",
+    "bannerImage": "/writeups/ctf/0xfun/media/0xfun.png",
+    "tags": [
+      "web",
+      "osint"
+    ],
+    "status": "published",
+    "path": "writeups/ctf/0xfun/0xfun.html"
   }
 ]

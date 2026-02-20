@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - OxFun - Perceptions</title>
+  <link rel="stylesheet" href="/staging/assets/css/writeups.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- WRITEUP CONTENT -->
+<section class="writeup-hero">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1>OxFun CTF 2026 - Perceptions</h1>
+  </div>
+</section>
+
+<section class="writeup-content">
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+  <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  
+  <div class="writeup-body">
+    <h2>Overview</h2>
+    <div class="writeup-banner-full-width">
+      <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/prompt.png" alt="Prompt" class="writeup-banner-link" onclick="openImageModal(this)">
+    </div>
+    <p>
+      Perceptions was an easy web challenge that costed 150 pts at the time of completion. 
+      It didn't require any complex exploitation techniques, just a bit of careful reading.
+    </p>
+
+    <h2>Challenge</h2>
+    <p>
+      We had to take a look at a blog and find some hidden attributes.
+    </p>
+    
+        <div class="code-block">
+      <div class="code-header">Prompt</div>
+      <pre>
+        <code>
+        Take a look at the blog I created! It has a neat backend and, interestingly, 
+          seems to use fewer ports.
+        </code>
+    </div>
+
+    <h2>Flag</h2>
+    <p>
+      When we start the challenge and go to the given link we land on a blog page
+      with some posts. Notably, the owner of the blog (<strong>Charlie</strong>) 
+      has named this blog <strong>"Charlie's Blog"</strong>.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/webpage_initial.png" alt="Initial View" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 1: Initial view of the blog page.</p>
+    </div>
+
+    <p>
+        By inspecting the Pages tab on the left we can see that there are many clues
+        about what we have to do. Let's start with the My Server page.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/myserver.png" alt="My Server Page" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 2: My Server page.</p>
+    </div>
+
+    <p>
+        The My Server page contains a hint about the ports used by the machine. Specifically,
+        it says that it is a full Linux container but it is only used for web serving
+        and some pretty generic Linux remote access stuff. 
+        From that we can infer that the machine has 2 primary ports open: 
+        <ul>
+          <li>Port 80 for HTTP</li>
+          <li>Port 51230 for SSH since that's what the server provided us with from the prompt</li>
+        </ul>
+    </p>
+
+    <p>
+      Let's make a mental note of this and take a look at the <strong>Secret Post</strong> for now.
+    </p>  
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/secret.png" alt="Secret Post Page" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 3: Secret Post page.</p>
+    </div>
+
+    <p>
+      The Secret Post contains a hint. It says that a password is hidden in this page.
+      From this we can understand that something is hidden on the source code of the page, since
+      you can write comments on HTML documents that are not visible on the version the users <!-- Like this one :D -->
+      see. So Let's inspect the source code of the page.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/html_comment_found_secret.png" alt="HTML Comment Found Secret" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 4: HTML comment found secret.</p>
+    </div>
+
+    <p>
+      We can see <code>UlLOPNeEak9rFfmL</code> and we can use it to login. But the login page
+      is not ready so we we can use it elsewhere like in the SSH port. 
+      Let's try to login with the username <code>charlie</code> and the password we found.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/ssh_charlie.PNG" alt="SSH Login" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 5: SSH login.</p>
+    </div>
+
+    <p>
+      We can see that we have access to the machine. Let's check the home directory of charlie with 
+      and find the flag in the <code>/secret_flag_333</code> directory.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Perceptions-web/flag.png" alt="flag" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Figure 6: Flag: <strong>0xfun{p3rsp3c71v3.15.k3y}</strong></p>
+    </div>
+
+    <!-- ========== END TEMPLATE SECTIONS ========== -->
+  </div>
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+</section>
+ 
+
+<script src="/staging/assets/js/main.js"></script>
+<script src="/staging/assets/js/writeups.js"></script>
+</body>
+</html>

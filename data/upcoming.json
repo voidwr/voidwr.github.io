@@ -22,5 +22,13 @@
     "category": "htb",
     "status": "locked",
     "image": "assets/media/logos/upcoming/conversor.png"
+  },
+  {
+    "id": "upcoming-batman",
+    "title": "Batman's Kitchen",
+    "description": "writeups for Batman's Kitchen CTF that started 20/2/2026",
+    "category": "ctf",
+    "status": "in-progress",
+    "image": "assets/media/logos/upcoming/batman.png"
   }
 ]

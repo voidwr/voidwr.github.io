@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTF Template - Challenges</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/writeups.css">
+</head>
+<body data-ctf="ctf-template">
+
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">About</a></li>
+  </ul>
+</nav>
+
+<section class="writeup-hero" style="background-image: url('/writeups/ctf/0xfun/media/0xfun.png'); background-size: cover; background-position: center;">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1></h1>
+    <!--<p class="writeup-subtitle"></p>-->
+  </div>
+</section>
+
+<section class="writeup-content">
+   <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  <div class="writeup-body">
+    <h2>Challenges</h2>
+    <p>
+      0xFun CTF took place online on 12/06/2026. There are more challenges that were
+      left unsolved, but these are the ones I was able to solve and document in a timely manner.
+      NOTE: The points listed on the screenshots <strong>DO NOT</strong> reflect the official 
+      scoring for each challenge as they were taken at different times during the CTF and the 
+      point values changed as teams solved them.
+    </p>
+
+    <div class="featured-grid" id="ctfChallengesGrid"></div>
+  </div>
+</section>
+
+<script>
+  const ctfChallenges = [
+    {
+      title: 'Lookup',
+      category: 'Web',
+      points: 100,
+      status: 'Published',
+      description: 'Lookup is an OSINT challenge that required leveraging dns records.',
+      image: '/writeups/ctf/0xfun/media/Lookup-OSINT/prompt.png',
+      anchor: '0xfun-lookup.html'
+    },
+    {
+      title: 'Perceptions',
+      category: 'Web',
+      points: 150,
+      status: 'Published',
+      description: 'Perceptions had a fun twist and ducks.',
+      image: '/writeups/ctf/0xfun/media/Perceptions-web/prompt.png',
+      anchor: '0xfun-perceptions.html'
+    },
+    {
+      title: 'Shell',
+      category: 'Web',
+      points: 150,
+      status: 'Published',
+      description: 'Shell had a very streamlined and known exploitation path.',
+      image: '/writeups/ctf/0xfun/media/Shell-web/prompt.png',
+      anchor: '0xfun-shell.html'
+    },
+    {
+      title: 'Templates',
+      category: 'Web',
+      points: 50,
+      status: 'Published',
+      description: 'Templates challenge focused on executing arbitary code through jinja2 template injection.',
+      image: '/writeups/ctf/0xfun/media/Templates-web/prompt.png',
+      anchor: '0xfun-templates.html'
+    }
+  ];
+
+  const grid = document.getElementById('ctfChallengesGrid');
+  if (grid) {
+    grid.innerHTML = ctfChallenges.map((challenge) => `
+      <a href="${challenge.anchor}" class="featured-card">
+        <img src="${challenge.image}" alt="${challenge.title}" class="card-image">
+        <div class="card-label">${challenge.category}</div>
+        <h3>${challenge.title}</h3>
+        <p class="card-date">${challenge.points} pts · ${challenge.status}</p>
+        <p class="card-desc">${challenge.description}</p>
+      </a>
+    `).join('');
+  }
+</script>
+
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/writeups.js"></script>
+</body>
+</html>

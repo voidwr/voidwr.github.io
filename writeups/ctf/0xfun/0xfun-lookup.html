@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voidwr - OxFun - Lookup</title>
+  <link rel="stylesheet" href="/staging/assets/css/writeups.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="/index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="/writeups.html" class="nav-link">📝 Writeups</a></li>
+    <li><a href="/about.html" class="nav-link">❤️ About</a></li>
+  </ul>
+</nav>
+
+<!-- WRITEUP CONTENT -->
+<section class="writeup-hero">
+  <div class="writeup-hero-overlay"></div>
+  <div class="writeup-hero-content">
+    <h1>OxFun CTF 2026 - Lookup</h1>
+  </div>
+</section>
+
+<section class="writeup-content">
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+  <a href="/writeups.html" class="writeups-back-link">Back to Writeups</a>
+  
+  <div class="writeup-body">
+    <h2>Overview</h2>
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Lookup-OSINT/prompt.png" alt="Prompt" class="writeup-banner-link" onclick="openImageModal(this)">
+    </div>
+    <p>Lookup was a fairly easy OSINT challenge that required leveraging DNS records.</p>
+
+    <h2>Challenge</h2>
+    <p>
+      The challenge prompt said that the event takes place on the host website and that
+      we needed to search for it.
+    </p>
+    
+        <div class="code-block">
+      <div class="code-header">Prompt</div>
+      <pre>
+        <code>
+        This event takes place on ctf.0xfun.org, but you can easily find it by searching.
+        </code>
+    </div>
+
+    <h2>Flag</h2>
+    <p>
+      Trying various commands <code>nslookup, ping etc.</code> and even inspecting the source
+      code of the website led to no results. However, 
+      by using <code>dig</code> to query for <strong>TXT</strong> DNS records revealed a TXT record that contained the flag.
+    </p>
+
+    <div class="gallery-item">
+        <img src="/staging/writeups/ctf/0xfun/media/Lookup-OSINT/flag.png" alt="Exploitation Step" class="gallery-image" onclick="openImageModal(this)">
+        <p class="image-caption">Flag: <strong>0xfun{4ny_1nfo_th4ts_pub1cly_4cc3ss1bl3_1s_0S1NT}</strong></p>
+    </div>
+
+    <!-- ===== REFERENCES SECTION ===== -->
+    <h2>References</h2>
+    <div class="references-grid">
+      <a href="https://man.openbsd.org/dig" target="_blank" class="reference-card">
+        <div class="reference-icon"></div>
+        <h3>man dig</h3>
+        <p>man pages for the dig command. Click here to go to the online version.</p>
+        <span class="reference-link">man dig</span>
+      </a>
+    </div>
+
+    <!-- ========== END TEMPLATE SECTIONS ========== -->
+  </div>
+  <a href="0xfun.html" class="writeups-back-link">Back to 0xFun</a>
+</section>
+ 
+
+<script src="/staging/assets/js/main.js"></script>
+<script src="/staging/assets/js/writeups.js"></script>
+</body>
+</html>

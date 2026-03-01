@@ -1,13 +1,5 @@
 [
   {
-    "id": "upcoming-soulmate",
-    "title": "Soulmate",
-    "description": "In compliance with Hack The Box's disclosure policy, this writeup will be made available only after the machine has been officially retired.",
-    "category": "htb",
-    "status": "locked",
-    "image": "assets/media/logos/upcoming/soulmate.png"
-  },
-  {
     "id": "upcoming-facts",
     "title": "Facts",
     "description": "In compliance with Hack The Box's disclosure policy, this writeup will be made available only after the machine has been officially retired.",
@@ -22,13 +14,5 @@
     "category": "htb",
     "status": "locked",
     "image": "assets/media/logos/upcoming/conversor.png"
-  },
-  {
-    "id": "upcoming-batman",
-    "title": "Batman's Kitchen",
-    "description": "writeups for Batman's Kitchen CTF that started 20/2/2026",
-    "category": "ctf",
-    "status": "in-progress",
-    "image": "assets/media/logos/upcoming/batman.png"
   }
 ]
